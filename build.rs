@@ -25,19 +25,20 @@ fn main() {
             continue;
         }
 
-        let fields: Vec<&str> = line.splitn(4, ',').collect();
-        if fields.len() != 4 {
-            panic!("{}번째 줄: 컬럼 수가 4가 아닙니다: {}", i + 1, line);
+        let fields: Vec<&str> = line.splitn(5, ',').collect();
+        if fields.len() != 5 {
+            panic!("{}번째 줄: 컬럼 수가 5가 아닙니다: {}", i + 1, line);
         }
 
         let base_form = fields[0];
-        let stem = fields[1];
-        let pos = match fields[2] {
+        // fields[1] = homonym_id (코드 생성에서는 사용하지 않음)
+        let stem = fields[2];
+        let pos = match fields[3] {
             "동사" => "YongeonType::Verb",
             "형용사" => "YongeonType::Adjective",
             other => panic!("{}번째 줄: 알 수 없는 품사: {}", i + 1, other),
         };
-        let conjugation = match fields[3] {
+        let conjugation = match fields[4] {
             "규칙" => "IrregularType::Regular",
             "ㄷ불규칙" => "IrregularType::Dieut",
             "ㅂ불규칙" => "IrregularType::Bieut",

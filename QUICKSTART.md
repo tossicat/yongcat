@@ -2,7 +2,7 @@
 
 ## build.rs
 
-Cargo가 컴파일 전에 자동 실행하는 빌드 스크립트이다.
+`build.rs`은 Cargo가 컴파일 전에 자동 실행하는 빌드 스크립트입니다.
 
 1. `data/yong_list.csv`를 읽는다 (`cargo:rerun-if-changed`로 CSV 변경 시 자동 재실행)
 2. 각 행을 `Yongeon::new(...)` 호출로 변환한다
