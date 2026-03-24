@@ -3,13 +3,16 @@ use std::fs;
 use std::io::{BufRead, BufReader};
 use std::path::Path;
 
+const CSV_PATH: &str = "data/yong_list.csv";
+const OUT_FILE: &str = "yong_data.rs";
+
 fn main() {
-    println!("cargo:rerun-if-changed=data/yong_list.csv");
+    println!("cargo:rerun-if-changed={}", CSV_PATH);
 
     let out_dir = env::var("OUT_DIR").unwrap();
-    let dest_path = Path::new(&out_dir).join("yong_data.rs");
+    let dest_path = Path::new(&out_dir).join(OUT_FILE);
 
-    let file = fs::File::open("data/yong_list.csv").expect("data/yong_list.csv를 열 수 없습니다");
+    let file = fs::File::open(CSV_PATH).expect(&format!("{}를 열 수 없습니다", CSV_PATH));
     let reader = BufReader::new(file);
 
     let mut entries = Vec::new();
