@@ -32,7 +32,7 @@ fn main() {
 
         let base_form = fields[0];
         // fields[1] = homonym_id (코드 생성에서는 사용하지 않음)
-        let stem = fields[2];
+        let eogan = fields[2];
         let pos = match fields[3] {
             "동사" => "YongeonType::Verb",
             "형용사" => "YongeonType::Adjective",
@@ -55,7 +55,7 @@ fn main() {
 
         entries.push(format!(
             "    Yongeon::new(\"{}\", \"{}\", {}, {}),",
-            base_form, stem, pos, conjugation
+            base_form, eogan, pos, conjugation
         ));
     }
 

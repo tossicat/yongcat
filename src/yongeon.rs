@@ -9,7 +9,7 @@ pub struct Yongeon<'a> {
     pub base_form: &'a str,
     /// 어간을 음절 단위로 분해한 형태
     /// 예: "먹다" → [Syllable(ㅁ,ㅓ,ㄱ)]
-    pub stem: Vec<Syllable>,
+    pub eogan: Vec<Syllable>,
     /// 용언 유형 (동사/형용사)
     pub yongeon_type: YongeonType,
     /// 불규칙 활용 유형
@@ -25,17 +25,17 @@ impl<'a> Yongeon<'a> {
     ///
     /// let y = Yongeon::new("먹다", "먹", YongeonType::Verb, IrregularType::Regular);
     /// assert_eq!(y.base_form, "먹다");
-    /// assert_eq!(y.stem_str(), "먹");
+    /// assert_eq!(y.eogan_str(), "먹");
     /// ```
     pub fn new(
         base_form: &'a str,
-        stem: &str,
+        eogan: &str,
         yongeon_type: YongeonType,
         irregular_type: IrregularType,
     ) -> Self {
         Self {
             base_form,
-            stem: syllable::decompose(stem),
+            eogan: syllable::decompose(eogan),
             yongeon_type,
             irregular_type,
         }
@@ -43,14 +43,14 @@ impl<'a> Yongeon<'a> {
 
     /// 어간을 문자열로 반환한다.
     /// 예: "먹다" → "먹", "예쁘다" → "예쁘"
-    pub fn stem_str(&self) -> String {
-        syllable::compose(&self.stem)
+    pub fn eogan_str(&self) -> String {
+        syllable::compose(&self.eogan)
     }
 
     /// 어간의 마지막 음절을 반환한다.
     /// 활용 규칙 적용 시 가장 중요한 정보이다.
     pub fn last_syllable(&self) -> &Syllable {
-        self.stem.last().expect("stem은 비어 있을 수 없음")
+        self.eogan.last().expect("eogan은 비어 있을 수 없음")
     }
 
     /// 어간에 받침이 있는지 확인한다.
@@ -104,7 +104,7 @@ mod tests {
     fn test_new_regular_verb() {
         let y = Yongeon::new("먹다", "먹", YongeonType::Verb, IrregularType::Regular);
         assert_eq!(y.base_form, "먹다");
-        assert_eq!(y.stem_str(), "먹");
+        assert_eq!(y.eogan_str(), "먹");
         assert_eq!(y.yongeon_type, YongeonType::Verb);
         assert_eq!(y.irregular_type, IrregularType::Regular);
     }
@@ -113,7 +113,7 @@ mod tests {
     fn test_new_irregular_verb() {
         let y = Yongeon::new("걷다", "걷", YongeonType::Verb, IrregularType::Dieut);
         assert_eq!(y.base_form, "걷다");
-        assert_eq!(y.stem_str(), "걷");
+        assert_eq!(y.eogan_str(), "걷");
         assert_eq!(y.irregular_type, IrregularType::Dieut);
     }
 
@@ -121,22 +121,22 @@ mod tests {
     fn test_new_regular_adjective() {
         let y = Yongeon::new("크다", "크", YongeonType::Adjective, IrregularType::Regular);
         assert_eq!(y.base_form, "크다");
-        assert_eq!(y.stem_str(), "크");
+        assert_eq!(y.eogan_str(), "크");
         assert_eq!(y.yongeon_type, YongeonType::Adjective);
     }
 
     #[test]
     fn test_new_irregular_adjective() {
         let y = Yongeon::new("춥다", "춥", YongeonType::Adjective, IrregularType::Bieut);
-        assert_eq!(y.stem_str(), "춥");
+        assert_eq!(y.eogan_str(), "춥");
         assert_eq!(y.irregular_type, IrregularType::Bieut);
     }
 
     #[test]
-    fn test_new_multi_syllable_stem() {
+    fn test_new_multi_syllable_eogan() {
         let y = Yongeon::new("아름답다", "아름답", YongeonType::Adjective, IrregularType::Bieut);
-        assert_eq!(y.stem_str(), "아름답");
-        assert_eq!(y.stem.len(), 3);
+        assert_eq!(y.eogan_str(), "아름답");
+        assert_eq!(y.eogan.len(), 3);
     }
 
     // --- 어간 분석 테스트 ---
@@ -227,9 +227,9 @@ mod tests {
             ("푸다", "푸", YongeonType::Verb, IrregularType::U, None),
         ];
 
-        for (base, stem, ytype, itype, expected_coda) in cases {
-            let y = Yongeon::new(base, stem, ytype, itype);
-            assert_eq!(y.stem_str(), stem, "어간 불일치: {}", base);
+        for (base, eogan, ytype, itype, expected_coda) in cases {
+            let y = Yongeon::new(base, eogan, ytype, itype);
+            assert_eq!(y.eogan_str(), eogan, "어간 불일치: {}", base);
             assert_eq!(
                 y.last_syllable().coda, expected_coda,
                 "종성 불일치: {}",
