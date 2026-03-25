@@ -1,4 +1,4 @@
-use yongcat::{find_yongeon, load_yongeons, IrregularType, YongeonType};
+use yongcat::{find_eogan, find_yongeon, load_yongeons, IrregularType, YongeonType};
 
 #[test]
 fn test_find_existing_verb() {
@@ -29,5 +29,28 @@ fn test_find_homonyms() {
 fn test_find_nonexistent() {
     let yongeons = load_yongeons();
     let results = find_yongeon(&yongeons, "없는단어다");
+    assert!(results.is_empty());
+}
+
+#[test]
+fn test_find_eogan_existing() {
+    let yongeons = load_yongeons();
+    let results = find_eogan(&yongeons, "먹");
+    assert!(!results.is_empty());
+    assert!(results.iter().all(|y| y.eogan_str() == "먹"));
+}
+
+#[test]
+fn test_find_eogan_irregular() {
+    let yongeons = load_yongeons();
+    let results = find_eogan(&yongeons, "가깝");
+    assert_eq!(results.len(), 1);
+    assert_eq!(results[0].irregular_type, IrregularType::Bieut);
+}
+
+#[test]
+fn test_find_eogan_nonexistent() {
+    let yongeons = load_yongeons();
+    let results = find_eogan(&yongeons, "없는어간");
     assert!(results.is_empty());
 }
