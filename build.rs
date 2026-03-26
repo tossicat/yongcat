@@ -25,13 +25,13 @@ fn main() {
             continue;
         }
 
-        let fields: Vec<&str> = line.splitn(5, ',').collect();
-        if fields.len() != 5 {
-            panic!("{}번째 줄: 컬럼 수가 5가 아닙니다: {}", i + 1, line);
+        let fields: Vec<&str> = line.splitn(7, ',').collect();
+        if fields.len() != 7 {
+            panic!("{}번째 줄: 컬럼 수가 7이 아닙니다: {}", i + 1, line);
         }
 
         let base_form = fields[0];
-        // fields[1] = homonym_id (코드 생성에서는 사용하지 않음)
+        // fields[1] = dict_id (코드 생성에서는 사용하지 않음)
         let eogan = fields[2];
         let pos = match fields[3] {
             "동사" => "YongeonType::Verb",
@@ -39,17 +39,17 @@ fn main() {
             other => panic!("{}번째 줄: 알 수 없는 품사: {}", i + 1, other),
         };
         let conjugation = match fields[4] {
-            "규칙" => "IrregularType::Regular",
-            "ㄷ불규칙" => "IrregularType::Dieut",
-            "ㅂ불규칙" => "IrregularType::Bieut",
-            "ㅎ불규칙" => "IrregularType::Hieut",
-            "ㄹ불규칙" => "IrregularType::Rieul",
-            "ㅅ불규칙" => "IrregularType::Siot",
-            "르불규칙" => "IrregularType::Reu",
-            "우불규칙" => "IrregularType::U",
-            "여불규칙" => "IrregularType::Yeo",
-            "러불규칙" => "IrregularType::Reo",
-            "으불규칙" => "IrregularType::Eu",
+            "규" => "IrregularType::Regular",
+            "ㄷ" => "IrregularType::Dieut",
+            "ㅂ" => "IrregularType::Bieut",
+            "ㅎ" => "IrregularType::Hieut",
+            "ㄹ" => "IrregularType::Rieul",
+            "ㅅ" => "IrregularType::Siot",
+            "르" => "IrregularType::Reu",
+            "우" => "IrregularType::U",
+            "여" => "IrregularType::Yeo",
+            "러" => "IrregularType::Reo",
+            "으" => "IrregularType::Eu",
             other => panic!("{}번째 줄: 알 수 없는 활용 유형: {}", i + 1, other),
         };
 
