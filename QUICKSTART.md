@@ -30,6 +30,20 @@ let results = yongcat::find_eogan(&yongeons, "먹");
 
 두 함수 모두 일치하는 용언이 없으면 빈 `Vec`을 반환한다.
 
+### 반환값
+
+두 함수 모두 `Yongeon` 구조체의 참조를 반환하며, 다음 필드에 접근할 수 있다.
+
+| 필드 | 타입 | 설명 |
+|------|------|------|
+| `base_form` | `&str` | 사전 기본형 (예: `"먹다"`) |
+| `dict_id` | `&str` | 표제어 번호 (동음이의어 구분, 없으면 빈 문자열) |
+| `eogan` | `Vec<Syllable>` | 어간의 음절 분해 |
+| `yongeon_type` | `YongeonType` | `Verb`(동사) 또는 `Adjective`(형용사) |
+| `irregular_type` | `IrregularType` | 활용 유형 (규칙 포함 11종) |
+
+CSV의 `usage`와 `grade`는 구조체에 포함되지 않는다.
+
 ## 등급별 컴파일
 
 Cargo feature로 특정 학습 등급의 용언만 포함할 수 있다. feature를 지정하지 않으면 전체(1,721개)가 포함된다.
