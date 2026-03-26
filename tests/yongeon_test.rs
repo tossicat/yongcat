@@ -21,8 +21,8 @@ fn test_find_existing_adjective() {
 #[test]
 fn test_find_homonyms() {
     let yongeons = load_yongeons();
-    let results = find_yongeon(&yongeons, "가리다");
-    assert!(results.len() >= 2, "가리다는 동음이의어가 2개 이상이어야 함");
+    let results = find_yongeon(&yongeons, "쓰다");
+    assert!(results.len() >= 2, "쓰다는 동음이의어가 2개 이상이어야 함");
 }
 
 #[test]

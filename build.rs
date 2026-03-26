@@ -9,6 +9,11 @@ const OUT_FILE: &str = "yong_data.rs";
 fn main() {
     println!("cargo:rerun-if-changed={}", CSV_PATH);
 
+    let grade_a = env::var("CARGO_FEATURE_GRADE_A").is_ok();
+    let grade_b = env::var("CARGO_FEATURE_GRADE_B").is_ok();
+    let grade_c = env::var("CARGO_FEATURE_GRADE_C").is_ok();
+    let filter_grade = grade_a || grade_b || grade_c;
+
     let out_dir = env::var("OUT_DIR").unwrap();
     let dest_path = Path::new(&out_dir).join(OUT_FILE);
 
@@ -28,6 +33,17 @@ fn main() {
         let fields: Vec<&str> = line.splitn(7, ',').collect();
         if fields.len() != 7 {
             panic!("{}번째 줄: 컬럼 수가 7이 아닙니다: {}", i + 1, line);
+        }
+
+        // grade 필터링: feature가 하나라도 지정되면 해당 등급만 포함
+        let grade = fields[6];
+        if filter_grade {
+            match grade {
+                "A" if !grade_a => continue,
+                "B" if !grade_b => continue,
+                "C" if !grade_c => continue,
+                _ => {}
+            }
         }
 
         let base_form = fields[0];

@@ -29,3 +29,20 @@ let results = yongcat::find_eogan(&yongeons, "먹");
 ```
 
 두 함수 모두 일치하는 용언이 없으면 빈 `Vec`을 반환한다.
+
+## 등급별 컴파일
+
+Cargo feature로 특정 학습 등급의 용언만 포함할 수 있다. feature를 지정하지 않으면 전체(1,721개)가 포함된다.
+
+```bash
+cargo build --features grade-a            # A등급만 (230개)
+cargo build --features "grade-a,grade-b"  # A+B등급 (863개)
+cargo build --features "grade-a,grade-b,grade-c"  # 전체 (1,721개)
+```
+
+`Cargo.toml` 의존성에서도 지정 가능하다.
+
+```toml
+[dependencies]
+yongcat = { path = "../yongcat", features = ["grade-a"] }
+```
