@@ -31,7 +31,7 @@ fn main() {
         }
 
         let base_form = fields[0];
-        // fields[1] = dict_id (코드 생성에서는 사용하지 않음)
+        let dict_id = fields[1];
         let eogan = fields[2];
         let pos = match fields[3] {
             "동사" => "YongeonType::Verb",
@@ -54,8 +54,8 @@ fn main() {
         };
 
         entries.push(format!(
-            "    Yongeon::new(\"{}\", \"{}\", {}, {}),",
-            base_form, eogan, pos, conjugation
+            "    Yongeon::new(\"{}\", \"{}\", \"{}\", {}, {}),",
+            base_form, dict_id, eogan, pos, conjugation
         ));
     }
 
