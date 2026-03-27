@@ -1,3 +1,4 @@
+mod eomi;
 pub mod syllable;
 pub mod types;
 pub mod yongeon;
