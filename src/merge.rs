@@ -3,21 +3,21 @@
 //!
 //! 불규칙 활용에 따른 어간 변환과 모음 축약을 담당합니다(3단계).
 
-use crate::eomi::EomiGroup;
+use crate::eomi::Eomi;
 use crate::syllable;
 use crate::yongeon::Yongeon;
 
 /// `join`의 단순 접합 결과에 음운 규칙을 적용하여 최종 활용형을 반환합니다.
 ///
-/// `EomiGroup`의 종류에 따라 적용하는 규칙이 달라집니다.
+/// `Eomi`의 종류에 따라 적용하는 규칙이 달라집니다.
 /// - `AhEo`: 불규칙 어간 변환 + 모음 축약/탈락
 /// - `Plain`: 받침 관련 음운 처리
 /// - `Fixed`: 변환 없이 그대로 반환
-pub fn apply(yongeon: &Yongeon, joined: &str, group: &EomiGroup) -> String {
+pub fn apply(yongeon: &Yongeon, joined: &str, group: &Eomi) -> String {
     match group {
-        EomiGroup::AhEo(_) => apply_ah_eo(yongeon, joined),
-        EomiGroup::Plain(_, _) => joined.to_string(),
-        EomiGroup::Fixed(_) => joined.to_string(),
+        Eomi::AhEo(_) => apply_ah_eo(yongeon, joined),
+        Eomi::Plain(_, _) => joined.to_string(),
+        Eomi::Fixed(_) => joined.to_string(),
     }
 }
 
@@ -77,7 +77,7 @@ fn apply_ah_eo(yongeon: &Yongeon, joined: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::eomi::AH_EO_GROUP;
+    use crate::eomi::ah_eo;
     use crate::join;
     use crate::types::{IrregularType, YongeonType};
 
@@ -96,91 +96,90 @@ mod tests {
     }
 
     /// join → merge 파이프라인을 실행합니다.
-    fn conjugate(yongeon: &Yongeon, eomi_idx: usize) -> String {
-        let group = EomiGroup::AhEo(AH_EO_GROUP[eomi_idx]);
-        let joined = join::select(yongeon, &group);
-        apply(yongeon, &joined, &group)
+    fn conjugate(yongeon: &Yongeon, eomi: &Eomi) -> String {
+        let joined = join::select(yongeon, eomi);
+        apply(yongeon, &joined, eomi)
     }
 
-    // --- 해요체 (AH_EO_GROUP[1]) ---
+    // --- 해요체 (ah_eo::AYO) ---
 
     #[test]
     fn test_positive_vowel_a() {
         // 가다: ㅏ+ㅏ → ㅏ → 가요
-        assert_eq!(conjugate(&verb("가다", "가"), 1), "가요");
+        assert_eq!(conjugate(&verb("가다", "가"), &ah_eo::AYO), "가요");
     }
 
     #[test]
     fn test_positive_vowel_o() {
         // 오다: ㅗ+ㅏ → ㅘ → 와요
-        assert_eq!(conjugate(&verb("오다", "오"), 1), "와요");
+        assert_eq!(conjugate(&verb("오다", "오"), &ah_eo::AYO), "와요");
     }
 
     #[test]
     fn test_negative_vowel_eo() {
         // 서다: ㅓ+ㅓ → ㅓ → 서요
-        assert_eq!(conjugate(&verb("서다", "서"), 1), "서요");
+        assert_eq!(conjugate(&verb("서다", "서"), &ah_eo::AYO), "서요");
     }
 
     #[test]
     fn test_negative_vowel_u() {
         // 주다: ㅜ+ㅓ → ㅝ → 줘요
-        assert_eq!(conjugate(&verb("주다", "주"), 1), "줘요");
+        assert_eq!(conjugate(&verb("주다", "주"), &ah_eo::AYO), "줘요");
     }
 
     #[test]
     fn test_negative_vowel_i() {
         // 피다: ㅣ+ㅓ → ㅕ → 펴요
-        assert_eq!(conjugate(&verb("피다", "피"), 1), "펴요");
+        assert_eq!(conjugate(&verb("피다", "피"), &ah_eo::AYO), "펴요");
     }
 
     #[test]
     fn test_eu_drop() {
         // 크다: ㅡ+ㅓ → ㅓ → 커요
-        assert_eq!(conjugate(&adj("크다", "크"), 1), "커요");
+        assert_eq!(conjugate(&adj("크다", "크"), &ah_eo::AYO), "커요");
     }
 
     #[test]
     fn test_hada() {
         // 하다: 하+여 → 해 → 해요
-        assert_eq!(conjugate(&verb("하다", "하"), 1), "해요");
+        assert_eq!(conjugate(&verb("하다", "하"), &ah_eo::AYO), "해요");
     }
 
     #[test]
     fn test_coda_no_contraction() {
         // 먹다: 받침 있음 → 축약 없음 → 먹어요
-        assert_eq!(conjugate(&verb("먹다", "먹"), 1), "먹어요");
+        assert_eq!(conjugate(&verb("먹다", "먹"), &ah_eo::AYO), "먹어요");
     }
 
-    // --- 과거 시제 (AH_EO_GROUP[6]) ---
+    // --- 과거 시제 (ah_eo::ASS) ---
 
     #[test]
     fn test_past_positive() {
         // 가다: 가+았 → 갔
-        assert_eq!(conjugate(&verb("가다", "가"), 6), "갔");
+        assert_eq!(conjugate(&verb("가다", "가"), &ah_eo::ASS), "갔");
     }
 
     #[test]
     fn test_past_negative() {
         // 먹다: 먹+었 → 먹었
-        assert_eq!(conjugate(&verb("먹다", "먹"), 6), "먹었");
+        assert_eq!(conjugate(&verb("먹다", "먹"), &ah_eo::ASS), "먹었");
     }
 
     #[test]
     fn test_past_hada() {
         // 하다: 하+였 → 했
-        assert_eq!(conjugate(&verb("하다", "하"), 6), "했");
+        assert_eq!(conjugate(&verb("하다", "하"), &ah_eo::ASS), "했");
     }
 
     #[test]
     fn test_past_o() {
         // 오다: 오+았 → 왔
-        assert_eq!(conjugate(&verb("오다", "오"), 6), "왔");
+        assert_eq!(conjugate(&verb("오다", "오"), &ah_eo::ASS), "왔");
     }
 
     #[test]
     fn test_past_eu() {
         // 크다: 크+었 → 컸
-        assert_eq!(conjugate(&adj("크다", "크"), 6), "컸");
+        assert_eq!(conjugate(&adj("크다", "크"), &ah_eo::ASS), "컸");
     }
 }

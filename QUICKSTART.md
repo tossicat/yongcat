@@ -49,10 +49,10 @@ CSV의 `usage`와 `grade`는 구조체에 포함되지 않는다.
 ### postfix — 단어 문자열로 활용형 생성
 
 ```rust
-use yongcat::eomi::{EomiGroup, AH_EO_GROUP};
+use yongcat::eomi::ah_eo;
 
 let yongeons = yongcat::load_yongeons();
-let results = yongcat::postfix(&yongeons, "가다", &EomiGroup::AhEo(AH_EO_GROUP[1]));
+let results = yongcat::postfix(&yongeons, "가다", &ah_eo::AYO);
 // [(&Yongeon, "가요")] — 동음이의어가 있으면 각각의 활용형을 반환
 ```
 
@@ -67,25 +67,25 @@ for (yongeon, conjugated) in &results {
 ### postfix_word — 단일 용언으로 활용형 생성
 
 ```rust
-use yongcat::eomi::{EomiGroup, AH_EO_GROUP};
+use yongcat::eomi::ah_eo;
 
 let yongeons = yongcat::load_yongeons();
 let meok = &yongcat::find_yongeon(&yongeons, "먹다")[0];
-let result = yongcat::postfix_word(meok, &EomiGroup::AhEo(AH_EO_GROUP[1]));
+let result = yongcat::postfix_word(meok, &ah_eo::AYO);
 // "먹어요"
 ```
 
-### AH_EO_GROUP 어미 목록
+### ah_eo 어미 목록
 
-| 인덱스 | 어미 | 용도 | 예시 (가다/먹다) |
-|--------|------|------|------------------|
-| 0 | 아/어/여 | 종결 (해라체) | 가, 먹어 |
-| 1 | 아요/어요/여요 | 종결 (해요체) | 가요, 먹어요 |
-| 2 | 아서/어서/여서 | 연결 (이유) | 가서, 먹어서 |
-| 3 | 아도/어도/여도 | 연결 (양보) | 가도, 먹어도 |
-| 4 | 아야/어야/여야 | 연결 (조건) | 가야, 먹어야 |
-| 5 | 아라/어라/여라 | 명령 | 가라, 먹어라 |
-| 6 | 았/었/였 | 과거 시제 | 갔, 먹었 |
+| 상수 | 어미 | 용도 | 예시 (가다/먹다) |
+|------|------|------|------------------|
+| `A` | 아/어/여 | 종결 (반말) | 가, 먹어 |
+| `AYO` | 아요/어요/여요 | 종결 (해요체) | 가요, 먹어요 |
+| `ASEO` | 아서/어서/여서 | 연결 (이유) | 가서, 먹어서 |
+| `ADO` | 아도/어도/여도 | 연결 (양보) | 가도, 먹어도 |
+| `AYA` | 아야/어야/여야 | 연결 (조건) | 가야, 먹어야 |
+| `ARA` | 아라/어라/여라 | 명령 | 가라, 먹어라 |
+| `ASS` | 았/었/였 | 과거 시제 | 갔, 먹었 |
 
 ## 등급별 컴파일
 
