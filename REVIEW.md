@@ -18,7 +18,9 @@ yongcat/
 │   └── postfix_test.rs        # postfix, postfix_word 통합 테스트
 └── src/
     ├── lib.rs                 # 크레이트 루트 + load_yongeons, find_yongeon, find_eogan, postfix, postfix_word
-    ├── eomi.rs                # 어미 데이터 (AhEoForm, AH_EO_GROUP, EomiGroup)
+    ├── eomi/
+    │   ├── mod.rs             # Eomi 열거형, AhEoForm 타입
+    │   └── ah_eo.rs           # 아/어 계열 어미 상수 (A, AYO, ASEO, ADO, AYA, ARA, ASS)
     ├── join.rs                # 모음조화 판별 + 어간-어미 접합 (1·2단계)
     ├── merge.rs               # 음운 축약/탈락 처리 (3단계)
     ├── syllable.rs            # 한글 음절 분해/합성
@@ -51,23 +53,29 @@ yongcat/
 - 품사/활용 판별: `is_verb()`, `is_adjective()`, `is_regular()`, `is_irregular()`
 - 모듈 문서 및 구조체 문서 보강 완료
 
-### 4. `src/eomi.rs` — 어미 데이터
+### 4. `src/eomi/` — 어미 데이터
 
-- `AhEoForm`: 아/어 계열 어미 튜플 타입 (양성모음, 음성모음, "하다"용)
-- `AH_EO_GROUP`: 7개 아/어 계열 어미 상수 (해라체, 해요체, 연결, 명령, 과거 시제)
-- `EomiGroup` 열거형: `AhEo`, `Plain`, `Fixed` 세 가지 어미 그룹 분류
+- `mod.rs`: `Eomi` 열거형 (`AhEo`, `Plain`, `Fixed`), `AhEoForm` 타입
+- `ah_eo.rs`: 아/어 계열 어미를 이름 있는 상수로 정의 (양성모음 형태의 로마자 음차)
+  - `A`: 아/어/여
+  - `AYO`: 아요/어요/여요
+  - `ASEO`: 아서/어서/여서
+  - `ADO`: 아도/어도/여도
+  - `AYA`: 아야/어야/여야
+  - `ARA`: 아라/어라/여라
+  - `ASS`: 았/었/였
 - 모듈 문서 추가 완료
 
 ### 5. `src/join.rs` — 어간-어미 결합 (1·2단계)
 
-- `select(yongeon, group) -> String`: 어미 그룹에서 적절한 어미를 선택하여 어간과 접합
+- `select(yongeon, eomi) -> String`: 어미에서 적절한 형태를 선택하여 어간과 접합
 - `AhEo` 분기: 모음조화 판별 ("하다" → 3번째, 양성모음 → 1번째, 그 외 → 2번째)
 - `Plain` 분기: 받침 유무로 선택
 - `Fixed` 분기: 고정 형태 그대로 접합
 
 ### 6. `src/merge.rs` — 음운 축약/탈락 (3단계)
 
-- `apply(yongeon, joined, group) -> String`: join 결과에 음운 규칙 적용
+- `apply(yongeon, joined, eomi) -> String`: join 결과에 음운 규칙 적용
 - 모음 축약 규칙: ㅏ+ㅏ→ㅏ, ㅗ+ㅏ→ㅘ, ㅜ+ㅓ→ㅝ, ㅣ+ㅓ→ㅕ, ㅓ+ㅓ→ㅓ
 - ㅡ 탈락: ㅡ+ㅓ→ㅓ (크다→커요)
 - "하다" 축약: 하+여→해 (하다→해요)
@@ -77,12 +85,12 @@ yongcat/
 ### 7. `src/lib.rs` — 크레이트 루트
 
 - 모듈 선언: `eomi`, `join`, `merge`, `syllable`, `types`, `yongeon`
-- pub re-export: `Yongeon`, `YongeonType`, `IrregularType`, `EomiGroup`
+- pub re-export: `Yongeon`, `YongeonType`, `IrregularType`, `Eomi`
 - `include!`로 build.rs가 생성한 `load_yongeons()` 포함
 - `find_yongeon()`: 기본형으로 용언 검색 (동음이의어 복수 반환)
 - `find_eogan()`: 어간으로 용언 검색 (동음이의어 복수 반환)
-- `postfix(yongeons, word, group)`: 단어 문자열로 동음이의어 전체 활용형 생성, `Vec<(&Yongeon, String)>` 반환
-- `postfix_word(yongeon, group)`: 단일 용언 활용형 생성, `String` 반환
+- `postfix(yongeons, word, eomi)`: 단어 문자열로 동음이의어 전체 활용형 생성, `Vec<(&Yongeon, String)>` 반환
+- `postfix_word(yongeon, eomi)`: 단일 용언 활용형 생성, `String` 반환
 - 모듈 문서 추가 완료
 
 ### 8. `build.rs` — 빌드 스크립트
@@ -102,8 +110,8 @@ yongcat/
 
 ### 10. 문서
 
-- `README.md`: 프로젝트 소개, 사용법 예시, 어미 그룹 표, 모듈 구조, 등급별 컴파일
-- `QUICKSTART.md`: 빌드 스크립트 설명, 용언 검색/활용 예시, 반환값 필드 표, 어미 목록 표
+- `README.md`: 프로젝트 소개, 사용법 예시, ah_eo 어미 상수 표, 모듈 구조, 등급별 컴파일
+- `QUICKSTART.md`: 빌드 스크립트 설명, 용언 검색/활용 예시, 반환값 필드 표, ah_eo 어미 상수 표
 
 ### 11. 기타
 
