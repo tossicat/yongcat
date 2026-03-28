@@ -107,7 +107,7 @@ yongcat/
 
 ### 11. 기타
 
-- `.gitignore`: `.DS_Store`, `docs/` 추가
+- `.gitignore`: `.DS_Store` 추가
 
 ## 미구현 사항
 
