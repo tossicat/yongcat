@@ -1,7 +1,19 @@
+//! ## 용언 구조체
+//! 이 모듈에는 `yongcat`이 처리할 수 있는 용언의 구조체를 정의하고 있습니다.
+//!
+//! `data/yong_list.csv`을 읽어서 `build.rs`으로 이 라이브러리를 컴파일 할 때
+//! 처리할 수 있는 전체 용언을 구조체로 가져옵니다.
+//!
+
 use crate::syllable::{self, Syllable};
 use crate::types::{IrregularType, YongeonType};
 
-/// 한국어 용언(동사/형용사)을 나타내는 구조체
+/// 한국어 용언(동사/형용사)을 나타내는 구조체입니다.
+///
+/// 기본형(`base_form`)과 사전 일련번호(`dict_id`)로 용언을 식별하고,
+/// 어간(`eogan`)을 음절 단위로 분해하여 보관합니다.
+/// 품사 유형(`yongeon_type`)과 불규칙 활용 유형(`irregular_type`)을 통해
+/// 활용 규칙 적용 시 필요한 정보를 제공합니다.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Yongeon<'a> {
     /// 기본형 (사전 등재 형태)
@@ -124,7 +136,13 @@ mod tests {
 
     #[test]
     fn test_new_regular_adjective() {
-        let y = Yongeon::new("크다", "", "크", YongeonType::Adjective, IrregularType::Regular);
+        let y = Yongeon::new(
+            "크다",
+            "",
+            "크",
+            YongeonType::Adjective,
+            IrregularType::Regular,
+        );
         assert_eq!(y.base_form, "크다");
         assert_eq!(y.eogan_str(), "크");
         assert_eq!(y.yongeon_type, YongeonType::Adjective);
@@ -132,14 +150,26 @@ mod tests {
 
     #[test]
     fn test_new_irregular_adjective() {
-        let y = Yongeon::new("춥다", "", "춥", YongeonType::Adjective, IrregularType::Bieut);
+        let y = Yongeon::new(
+            "춥다",
+            "",
+            "춥",
+            YongeonType::Adjective,
+            IrregularType::Bieut,
+        );
         assert_eq!(y.eogan_str(), "춥");
         assert_eq!(y.irregular_type, IrregularType::Bieut);
     }
 
     #[test]
     fn test_new_multi_syllable_eogan() {
-        let y = Yongeon::new("아름답다", "", "아름답", YongeonType::Adjective, IrregularType::Bieut);
+        let y = Yongeon::new(
+            "아름답다",
+            "",
+            "아름답",
+            YongeonType::Adjective,
+            IrregularType::Bieut,
+        );
         assert_eq!(y.eogan_str(), "아름답");
         assert_eq!(y.eogan.len(), 3);
     }
@@ -160,14 +190,26 @@ mod tests {
         let meok = Yongeon::new("먹다", "", "먹", YongeonType::Verb, IrregularType::Regular);
         assert!(meok.has_coda());
 
-        let ga = Yongeon::new("가다", "01", "가", YongeonType::Verb, IrregularType::Regular);
+        let ga = Yongeon::new(
+            "가다",
+            "01",
+            "가",
+            YongeonType::Verb,
+            IrregularType::Regular,
+        );
         assert!(!ga.has_coda());
     }
 
     #[test]
     fn test_is_positive_vowel() {
         // "가다" — ㅏ (양성)
-        let ga = Yongeon::new("가다", "01", "가", YongeonType::Verb, IrregularType::Regular);
+        let ga = Yongeon::new(
+            "가다",
+            "01",
+            "가",
+            YongeonType::Verb,
+            IrregularType::Regular,
+        );
         assert!(ga.is_positive_vowel());
 
         // "오다" — ㅗ (양성)
@@ -179,7 +221,13 @@ mod tests {
         assert!(!meok.is_positive_vowel());
 
         // "크다" — ㅡ (음성)
-        let keu = Yongeon::new("크다", "", "크", YongeonType::Adjective, IrregularType::Regular);
+        let keu = Yongeon::new(
+            "크다",
+            "",
+            "크",
+            YongeonType::Adjective,
+            IrregularType::Regular,
+        );
         assert!(!keu.is_positive_vowel());
     }
 
@@ -191,7 +239,13 @@ mod tests {
         assert!(verb.is_verb());
         assert!(!verb.is_adjective());
 
-        let adj = Yongeon::new("예쁘다", "", "예쁘", YongeonType::Adjective, IrregularType::Regular);
+        let adj = Yongeon::new(
+            "예쁘다",
+            "",
+            "예쁘",
+            YongeonType::Adjective,
+            IrregularType::Regular,
+        );
         assert!(adj.is_adjective());
         assert!(!adj.is_verb());
     }
@@ -214,7 +268,13 @@ mod tests {
         let y = Yongeon::new("걷다", "02", "걷", YongeonType::Verb, IrregularType::Dieut);
         assert_eq!(format!("{}", y), "걷다 (동사, ㄷ불규칙)");
 
-        let y = Yongeon::new("예쁘다", "", "예쁘", YongeonType::Adjective, IrregularType::Regular);
+        let y = Yongeon::new(
+            "예쁘다",
+            "",
+            "예쁘",
+            YongeonType::Adjective,
+            IrregularType::Regular,
+        );
         assert_eq!(format!("{}", y), "예쁘다 (형용사, 규칙)");
     }
 
@@ -223,12 +283,54 @@ mod tests {
     #[test]
     fn test_various_irregular_types() {
         let cases = vec![
-            ("듣다", "", "듣", YongeonType::Verb, IrregularType::Dieut, Some('ㄷ')),
-            ("돕다", "", "돕", YongeonType::Verb, IrregularType::Bieut, Some('ㅂ')),
-            ("노랗다", "", "노랗", YongeonType::Adjective, IrregularType::Hieut, Some('ㅎ')),
-            ("살다", "", "살", YongeonType::Verb, IrregularType::Rieul, Some('ㄹ')),
-            ("짓다", "", "짓", YongeonType::Verb, IrregularType::Siot, Some('ㅅ')),
-            ("모르다", "", "모르", YongeonType::Verb, IrregularType::Reu, None),
+            (
+                "듣다",
+                "",
+                "듣",
+                YongeonType::Verb,
+                IrregularType::Dieut,
+                Some('ㄷ'),
+            ),
+            (
+                "돕다",
+                "",
+                "돕",
+                YongeonType::Verb,
+                IrregularType::Bieut,
+                Some('ㅂ'),
+            ),
+            (
+                "노랗다",
+                "",
+                "노랗",
+                YongeonType::Adjective,
+                IrregularType::Hieut,
+                Some('ㅎ'),
+            ),
+            (
+                "살다",
+                "",
+                "살",
+                YongeonType::Verb,
+                IrregularType::Rieul,
+                Some('ㄹ'),
+            ),
+            (
+                "짓다",
+                "",
+                "짓",
+                YongeonType::Verb,
+                IrregularType::Siot,
+                Some('ㅅ'),
+            ),
+            (
+                "모르다",
+                "",
+                "모르",
+                YongeonType::Verb,
+                IrregularType::Reu,
+                None,
+            ),
             ("푸다", "", "푸", YongeonType::Verb, IrregularType::U, None),
         ];
 
@@ -236,7 +338,8 @@ mod tests {
             let y = Yongeon::new(base, dict_id, eogan, ytype, itype);
             assert_eq!(y.eogan_str(), eogan, "어간 불일치: {}", base);
             assert_eq!(
-                y.last_syllable().coda, expected_coda,
+                y.last_syllable().coda,
+                expected_coda,
                 "종성 불일치: {}",
                 base
             );
