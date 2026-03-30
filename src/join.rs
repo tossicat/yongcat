@@ -12,9 +12,9 @@ use crate::yongeon::Yongeon;
 /// - `AhEo`: 모음조화에 따라 양성/음성/"하다"용 중 선택
 /// - `Plain`: 받침 유무에 따라 선택
 /// - `Fixed`: 고정 형태 그대로 사용
-pub fn select(yongeon: &Yongeon, group: &Eomi) -> String {
+pub fn select(yongeon: &Yongeon, eomi: &Eomi) -> String {
     let eogan = yongeon.eogan_str();
-    let eomi = match group {
+    let suffix = match eomi {
         Eomi::AhEo(form) => {
             if yongeon.base_form.ends_with("하다") {
                 form.2
@@ -33,7 +33,7 @@ pub fn select(yongeon: &Yongeon, group: &Eomi) -> String {
         }
         Eomi::Fixed(s) => s,
     };
-    format!("{}{}", eogan, eomi)
+    format!("{}{}", eogan, suffix)
 }
 
 #[cfg(test)]
