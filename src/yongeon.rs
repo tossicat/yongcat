@@ -49,6 +49,11 @@ impl<'a> Yongeon<'a> {
         yongeon_type: YongeonType,
         irregular_type: IrregularType,
     ) -> Self {
+        assert!(
+            !eogan.is_empty(),
+            "어간이 비어 있습니다: base_form=\"{}\"",
+            base_form
+        );
         Self {
             base_form,
             dict_id,
