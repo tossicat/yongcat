@@ -4,17 +4,19 @@
 //! 불규칙 활용에 따른 어간 변환과 모음 축약을 담당합니다(3단계).
 
 use crate::eomi::Eomi;
+use crate::irregular;
 use crate::syllable;
-use crate::types::IrregularType;
 use crate::yongeon::Yongeon;
 
 /// `join`의 단순 접합 결과에 음운 규칙을 적용하여 최종 활용형을 반환합니다.
 ///
-/// `Eomi`의 종류에 따라 적용하는 규칙이 달라집니다.
-/// - `AhEo`: 불규칙 어간 변환 + 모음 축약/탈락
-/// - `Plain`: 받침 관련 음운 처리
-/// - `Fixed`: 변환 없이 그대로 반환
+/// 불규칙 활용이면 `irregular` 모듈에 위임하고,
+/// 규칙 활용이면 모음 축약/탈락 규칙을 적용합니다.
 pub(crate) fn apply(yongeon: &Yongeon, joined: &str, eomi: &Eomi) -> String {
+    if let Some(result) = irregular::merge(yongeon, joined, eomi) {
+        return result;
+    }
+
     match eomi {
         Eomi::AhEo(_) => apply_ah_eo(yongeon, joined),
         Eomi::Plain(_, _) => joined.to_string(),
@@ -31,10 +33,8 @@ pub(crate) fn apply(yongeon: &Yongeon, joined: &str, eomi: &Eomi) -> String {
 /// - ㅣ+ㅓ → ㅕ (피+어요 → 펴요)
 /// - ㅡ+ㅓ → ㅓ (크+어요 → 커요)
 /// - ㅓ+ㅓ → ㅓ (서+어요 → 서요)
-/// - 하+여 → 해 (하+여요 → 해요)
 fn apply_ah_eo(yongeon: &Yongeon, joined: &str) -> String {
-    // 받침이 있으면 축약 없음 (규칙 활용)
-    // TODO: 불규칙 활용 처리 (ㄷ, ㅂ, ㅅ, ㅎ 등)
+    // 받침이 있으면 축약 없음
     if yongeon.has_coda() {
         return joined.to_string();
     }
@@ -55,18 +55,14 @@ fn apply_ah_eo(yongeon: &Yongeon, joined: &str) -> String {
     let last_idx = modified_eogan.len() - 1;
 
     // 모음 축약 규칙
-    let new_vowel = if yongeon.irregular_type == IrregularType::Yeo {
-        'ㅐ' // 하+여 → 해
-    } else {
-        match modified_eogan[last_idx].vowel {
-            'ㅏ' => 'ㅏ', // ㅏ+ㅏ → ㅏ (동일모음 탈락)
-            'ㅓ' => 'ㅓ', // ㅓ+ㅓ → ㅓ (동일모음 탈락)
-            'ㅗ' => 'ㅘ', // ㅗ+ㅏ → ㅘ
-            'ㅜ' => 'ㅝ', // ㅜ+ㅓ → ㅝ
-            'ㅣ' => 'ㅕ', // ㅣ+ㅓ → ㅕ
-            'ㅡ' => 'ㅓ', // ㅡ+ㅓ → ㅓ (ㅡ 탈락)
-            _ => return joined.to_string(),
-        }
+    let new_vowel = match modified_eogan[last_idx].vowel {
+        'ㅏ' => 'ㅏ', // ㅏ+ㅏ → ㅏ (동일모음 탈락)
+        'ㅓ' => 'ㅓ', // ㅓ+ㅓ → ㅓ (동일모음 탈락)
+        'ㅗ' => 'ㅘ', // ㅗ+ㅏ → ㅘ
+        'ㅜ' => 'ㅝ', // ㅜ+ㅓ → ㅝ
+        'ㅣ' => 'ㅕ', // ㅣ+ㅓ → ㅕ
+        'ㅡ' => 'ㅓ', // ㅡ+ㅓ → ㅓ (ㅡ 탈락)
+        _ => return joined.to_string(),
     };
 
     modified_eogan[last_idx].vowel = new_vowel;

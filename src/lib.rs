@@ -10,6 +10,7 @@
 //! 적절하게 바꿔서 이를 합쳐서 반환합니다.
 
 pub mod eomi;
+pub mod irregular;
 pub mod join;
 pub mod merge;
 pub mod syllable;

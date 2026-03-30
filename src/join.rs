@@ -4,22 +4,22 @@
 //! 모음조화 판별(1단계)과 단순 접합(2단계)을 담당합니다.
 
 use crate::eomi::Eomi;
-use crate::types::IrregularType;
+use crate::irregular;
 use crate::yongeon::Yongeon;
 
 /// 어미 그룹에서 적절한 어미를 선택하여 어간과 접합합니다.
 ///
-/// `Eomi`의 종류에 따라 어미 선택 규칙이 달라집니다.
-/// - `AhEo`: 모음조화에 따라 양성/음성/"하다"용 중 선택
-/// - `Plain`: 받침 유무에 따라 선택
-/// - `Fixed`: 고정 형태 그대로 사용
+/// 불규칙 활용이면 `irregular` 모듈에 위임하고,
+/// 규칙 활용이면 모음조화에 따라 어미를 선택합니다.
 pub(crate) fn select(yongeon: &Yongeon, eomi: &Eomi) -> String {
+    if let Some(result) = irregular::join(yongeon, eomi) {
+        return result;
+    }
+
     let eogan = yongeon.eogan_str();
     let suffix = match eomi {
         Eomi::AhEo(form) => {
-            if yongeon.irregular_type == IrregularType::Yeo {
-                form.2
-            } else if yongeon.is_positive_vowel() {
+            if yongeon.is_positive_vowel() {
                 form.0
             } else {
                 form.1
