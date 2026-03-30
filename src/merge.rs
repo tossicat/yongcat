@@ -13,7 +13,7 @@ use crate::yongeon::Yongeon;
 /// - `AhEo`: 불규칙 어간 변환 + 모음 축약/탈락
 /// - `Plain`: 받침 관련 음운 처리
 /// - `Fixed`: 변환 없이 그대로 반환
-pub fn apply(yongeon: &Yongeon, joined: &str, group: &Eomi) -> String {
+pub(crate) fn apply(yongeon: &Yongeon, joined: &str, group: &Eomi) -> String {
     match group {
         Eomi::AhEo(_) => apply_ah_eo(yongeon, joined),
         Eomi::Plain(_, _) => joined.to_string(),
