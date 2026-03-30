@@ -1,7 +1,7 @@
 //! 한글 음절 분해/합성 모듈
 //!
 //! 한글 유니코드 공식을 이용하여 완성형 한글을 초성, 중성, 종성으로
-//! 분해하거나 다시 합성하는 기능을 제공한다.
+//! 분해하거나 다시 합성하는 기능을 제공합니다.
 //!
 //! 유니코드 공식: (초성 × 21 + 중성) × 28 + 종성 + 0xAC00
 
@@ -49,24 +49,24 @@ pub struct Syllable {
 }
 
 impl Syllable {
-    /// 종성(받침)이 있는지 확인한다.
+    /// 종성(받침)이 있는지 확인합니다.
     pub fn has_coda(&self) -> bool {
         self.coda.is_some()
     }
 
-    /// 중성이 양성모음(ㅏ, ㅗ)인지 확인한다.
+    /// 중성이 양성모음(ㅏ, ㅗ)인지 확인합니다.
     pub fn is_positive_vowel(&self) -> bool {
         matches!(self.vowel, 'ㅏ' | 'ㅗ')
     }
 }
 
-/// 완성형 한글 범위(가~힣)인지 확인한다.
+/// 완성형 한글 범위(가~힣)인지 확인합니다.
 fn is_hangul(c: char) -> bool {
     let code = c as u32;
     code >= HANGUL_BASE && code < HANGUL_BASE + ONSET_COUNT * VOWEL_COUNT * CODA_COUNT
 }
 
-/// 한글 한 글자를 초성, 중성, 종성으로 분리한다.
+/// 한글 한 글자를 초성, 중성, 종성으로 분리합니다.
 fn split(c: char) -> Option<Syllable> {
     if !is_hangul(c) {
         return None;
@@ -83,7 +83,7 @@ fn split(c: char) -> Option<Syllable> {
     })
 }
 
-/// 초성, 중성, 종성을 합쳐 한글 한 글자로 만든다.
+/// 초성, 중성, 종성을 합쳐 한글 한 글자로 만듭니다.
 fn join(s: &Syllable) -> char {
     let onset_idx = ONSETS.iter().position(|&c| c == s.onset).unwrap() as u32;
     let vowel_idx = VOWELS.iter().position(|&c| c == s.vowel).unwrap() as u32;
@@ -95,12 +95,12 @@ fn join(s: &Syllable) -> char {
         .unwrap()
 }
 
-/// 문자열을 음절 단위로 분해한다. 비한글 문자는 건너뛴다.
+/// 문자열을 음절 단위로 분해합니다. 비한글 문자는 건너뜁니다.
 pub fn decompose(s: &str) -> Vec<Syllable> {
     s.chars().filter_map(split).collect()
 }
 
-/// 음절들을 합성하여 문자열로 만든다.
+/// 음절들을 합성하여 문자열로 만듭니다.
 pub fn compose(syllables: &[Syllable]) -> String {
     syllables.iter().map(join).collect()
 }

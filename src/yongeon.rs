@@ -32,7 +32,7 @@ pub struct Yongeon<'a> {
 }
 
 impl<'a> Yongeon<'a> {
-    /// 기본형과 어간 문자열로부터 Yongeon을 생성한다.
+    /// 기본형과 어간 문자열로부터 Yongeon을 생성합니다.
     ///
     /// # 예시
     /// ```
@@ -58,44 +58,44 @@ impl<'a> Yongeon<'a> {
         }
     }
 
-    /// 어간을 문자열로 반환한다.
+    /// 어간을 문자열로 반환합니다.
     /// 예: "먹다" → "먹", "예쁘다" → "예쁘"
     pub fn eogan_str(&self) -> String {
         syllable::compose(&self.eogan)
     }
 
-    /// 어간의 마지막 음절을 반환한다.
-    /// 활용 규칙 적용 시 가장 중요한 정보이다.
+    /// 어간의 마지막 음절을 반환합니다.
+    /// 활용 규칙 적용 시 가장 중요한 정보입니다.
     pub fn last_syllable(&self) -> &Syllable {
         self.eogan.last().expect("eogan은 비어 있을 수 없음")
     }
 
-    /// 어간에 받침이 있는지 확인한다.
+    /// 어간에 받침이 있는지 확인합니다.
     pub fn has_coda(&self) -> bool {
         self.last_syllable().has_coda()
     }
 
-    /// 어간 마지막 모음이 양성모음(ㅏ, ㅗ)인지 확인한다.
+    /// 어간 마지막 모음이 양성모음(ㅏ, ㅗ)인지 확인합니다.
     pub fn is_positive_vowel(&self) -> bool {
         self.last_syllable().is_positive_vowel()
     }
 
-    /// 동사인지 확인한다.
+    /// 동사인지 확인합니다.
     pub fn is_verb(&self) -> bool {
         self.yongeon_type.is_verb()
     }
 
-    /// 형용사인지 확인한다.
+    /// 형용사인지 확인합니다.
     pub fn is_adjective(&self) -> bool {
         self.yongeon_type.is_adjective()
     }
 
-    /// 규칙 활용인지 확인한다.
+    /// 규칙 활용인지 확인합니다.
     pub fn is_regular(&self) -> bool {
         self.irregular_type.is_regular()
     }
 
-    /// 불규칙 활용인지 확인한다.
+    /// 불규칙 활용인지 확인합니다.
     pub fn is_irregular(&self) -> bool {
         self.irregular_type.is_irregular()
     }
