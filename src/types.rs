@@ -1,3 +1,9 @@
+//! ## 용언 타입 정의
+//! 용언의 품사 유형(`YongeonType`)과 불규칙 활용 유형(`IrregularType`)을
+//! 정의하고 있습니다.
+//!
+//! `build.rs`에서 CSV를 파싱할 때와 `Yongeon` 구조체에서 사용합니다.
+
 /// 용언 유형 (동사/형용사)
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum YongeonType {
