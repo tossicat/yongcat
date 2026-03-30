@@ -5,6 +5,7 @@
 
 use crate::eomi::Eomi;
 use crate::syllable;
+use crate::types::IrregularType;
 use crate::yongeon::Yongeon;
 
 /// `join`의 단순 접합 결과에 음운 규칙을 적용하여 최종 활용형을 반환합니다.
@@ -54,7 +55,7 @@ fn apply_ah_eo(yongeon: &Yongeon, joined: &str) -> String {
     let last_idx = modified_eogan.len() - 1;
 
     // 모음 축약 규칙
-    let new_vowel = if yongeon.base_form.ends_with("하다") {
+    let new_vowel = if yongeon.irregular_type == IrregularType::Yeo {
         'ㅐ' // 하+여 → 해
     } else {
         match modified_eogan[last_idx].vowel {
@@ -141,8 +142,9 @@ mod tests {
 
     #[test]
     fn test_hada() {
-        // 하다: 하+여 → 해 → 해요
-        assert_eq!(conjugate(&verb("하다", "하"), &ah_eo::AYO), "해요");
+        // 하다: 여불규칙, 하+여 → 해 → 해요
+        let ha = Yongeon::new("하다", "", "하", YongeonType::Verb, IrregularType::Yeo);
+        assert_eq!(conjugate(&ha, &ah_eo::AYO), "해요");
     }
 
     #[test]
@@ -167,8 +169,9 @@ mod tests {
 
     #[test]
     fn test_past_hada() {
-        // 하다: 하+였 → 했
-        assert_eq!(conjugate(&verb("하다", "하"), &ah_eo::ASS), "했");
+        // 하다: 여불규칙, 하+였 → 했
+        let ha = Yongeon::new("하다", "", "하", YongeonType::Verb, IrregularType::Yeo);
+        assert_eq!(conjugate(&ha, &ah_eo::ASS), "했");
     }
 
     #[test]

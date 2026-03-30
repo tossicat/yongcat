@@ -4,6 +4,7 @@
 //! 모음조화 판별(1단계)과 단순 접합(2단계)을 담당합니다.
 
 use crate::eomi::Eomi;
+use crate::types::IrregularType;
 use crate::yongeon::Yongeon;
 
 /// 어미 그룹에서 적절한 어미를 선택하여 어간과 접합합니다.
@@ -16,7 +17,7 @@ pub(crate) fn select(yongeon: &Yongeon, eomi: &Eomi) -> String {
     let eogan = yongeon.eogan_str();
     let suffix = match eomi {
         Eomi::AhEo(form) => {
-            if yongeon.base_form.ends_with("하다") {
+            if yongeon.irregular_type == IrregularType::Yeo {
                 form.2
             } else if yongeon.is_positive_vowel() {
                 form.0
@@ -66,8 +67,8 @@ mod tests {
 
     #[test]
     fn test_ah_eo_hada() {
-        // 하다: "하다"용 → "여요" 선택
-        let ha = verb("하다", "하");
+        // 하다: 여불규칙 → "여요" 선택
+        let ha = Yongeon::new("하다", "", "하", YongeonType::Verb, IrregularType::Yeo);
         let result = select(&ha, &ah_eo::AYO);
         assert_eq!(result, "하여요");
     }
