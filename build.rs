@@ -17,7 +17,8 @@ fn main() {
     let out_dir = env::var("OUT_DIR").unwrap();
     let dest_path = Path::new(&out_dir).join(OUT_FILE);
 
-    let file = fs::File::open(CSV_PATH).expect(&format!("{}를 열 수 없습니다", CSV_PATH));
+    let file = fs::File::open(CSV_PATH)
+        .unwrap_or_else(|_| panic!("{}를 열 수 없습니다", CSV_PATH));
     let reader = BufReader::new(file);
 
     let mut entries = Vec::new();
