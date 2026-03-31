@@ -106,6 +106,43 @@ fn test_postfix_word_command() {
     assert_eq!(postfix_word(ga, &ah_eo::ARA), "가라");
 }
 
+// --- postfix_word: 여불규칙 (복합 하다 용언) ---
+//
+// "하다"뿐 아니라 "공부하다", "감사하다" 등 복합 하다 용언도
+// 여불규칙이 올바르게 적용되는지 검증합니다.
+
+/// 동사: 공부하다 + 여요 → 공부해요
+#[test]
+fn test_postfix_word_yeo_verb() {
+    let yongeons = load_yongeons();
+    let gongbu = &find_yongeon(&yongeons, "공부하다")[0];
+    assert_eq!(postfix_word(gongbu, &ah_eo::AYO), "공부해요");
+}
+
+/// 형용사: 감사하다 + 여요 → 감사해요
+#[test]
+fn test_postfix_word_yeo_adjective() {
+    let yongeons = load_yongeons();
+    let gamsa = &find_yongeon(&yongeons, "감사하다")[0];
+    assert_eq!(postfix_word(gamsa, &ah_eo::AYO), "감사해요");
+}
+
+/// 여불규칙 과거: 공부하다 + 였 → 공부했
+#[test]
+fn test_postfix_word_yeo_past() {
+    let yongeons = load_yongeons();
+    let gongbu = &find_yongeon(&yongeons, "공부하다")[0];
+    assert_eq!(postfix_word(gongbu, &ah_eo::ASS), "공부했");
+}
+
+/// 여불규칙 연결: 감사하다 + 여서 → 감사해서
+#[test]
+fn test_postfix_word_yeo_reason() {
+    let yongeons = load_yongeons();
+    let gamsa = &find_yongeon(&yongeons, "감사하다")[0];
+    assert_eq!(postfix_word(gamsa, &ah_eo::ASEO), "감사해서");
+}
+
 // --- postfix: 동음이의어 처리 ---
 //
 // `postfix`는 단어 문자열을 받아 동음이의어 전체에 대해 활용형을 생성합니다.
