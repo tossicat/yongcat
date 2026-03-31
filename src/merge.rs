@@ -11,20 +11,27 @@ use crate::yongeon::Yongeon;
 /// `join`의 단순 접합 결과에 음운 규칙을 적용하여 최종 활용형을 반환합니다.
 ///
 /// 불규칙 활용이면 `irregular` 모듈에 위임하고,
-/// 규칙 활용이면 모음 축약/탈락 규칙을 적용합니다.
+/// 규칙 활용이면 `regular`로 처리합니다.
 pub(crate) fn apply(yongeon: &Yongeon, joined: &str, eomi: &Eomi) -> String {
     if let Some(result) = irregular::merge(yongeon, joined, eomi) {
         return result;
     }
+    regular(yongeon, joined, eomi)
+}
 
+/// 규칙 활용의 음운 축약/탈락을 처리합니다.
+///
+/// `AhEo` 어미이면 모음 축약을 적용하고,
+/// `Plain`/`Fixed` 어미이면 그대로 반환합니다.
+fn regular(yongeon: &Yongeon, joined: &str, eomi: &Eomi) -> String {
     match eomi {
-        Eomi::AhEo(_) => apply_ah_eo(yongeon, joined),
+        Eomi::AhEo(_) => contract_ah_eo(yongeon, joined),
         Eomi::Plain(_, _) => joined.to_string(),
         Eomi::Fixed(_) => joined.to_string(),
     }
 }
 
-/// 아/어 계열 어미의 음운 축약을 적용합니다.
+/// 아/어 계열 어미의 모음 축약을 적용합니다.
 ///
 /// 어간에 받침이 없을 때 모음 축약이 발생합니다.
 /// - ㅏ+ㅏ → ㅏ (가+아요 → 가요)
@@ -33,7 +40,7 @@ pub(crate) fn apply(yongeon: &Yongeon, joined: &str, eomi: &Eomi) -> String {
 /// - ㅣ+ㅓ → ㅕ (피+어요 → 펴요)
 /// - ㅡ+ㅓ → ㅓ (크+어요 → 커요)
 /// - ㅓ+ㅓ → ㅓ (서+어요 → 서요)
-fn apply_ah_eo(yongeon: &Yongeon, joined: &str) -> String {
+fn contract_ah_eo(yongeon: &Yongeon, joined: &str) -> String {
     // 받침이 있으면 축약 없음
     if yongeon.has_coda() {
         return joined.to_string();

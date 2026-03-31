@@ -10,12 +10,18 @@ use crate::yongeon::Yongeon;
 /// 어미 그룹에서 적절한 어미를 선택하여 어간과 접합합니다.
 ///
 /// 불규칙 활용이면 `irregular` 모듈에 위임하고,
-/// 규칙 활용이면 모음조화에 따라 어미를 선택합니다.
+/// 규칙 활용이면 `regular`로 처리합니다.
 pub(crate) fn select(yongeon: &Yongeon, eomi: &Eomi) -> String {
     if let Some(result) = irregular::join(yongeon, eomi) {
         return result;
     }
+    regular(yongeon, eomi)
+}
 
+/// 규칙 활용의 어간-어미 결합을 처리합니다.
+///
+/// 모음조화에 따라 적절한 어미 형태를 선택하고 어간과 접합합니다.
+fn regular(yongeon: &Yongeon, eomi: &Eomi) -> String {
     let eogan = yongeon.eogan_str();
     let suffix = match eomi {
         Eomi::AhEo(form) => {
