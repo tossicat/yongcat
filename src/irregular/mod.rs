@@ -4,6 +4,7 @@
 //! 각 불규칙 유형은 별도 파일에 구현되며,
 //! `join`과 `merge` 함수가 유형별로 디스패치합니다.
 
+pub mod dieut;
 pub mod yeo;
 
 use crate::eomi::Eomi;
@@ -16,6 +17,7 @@ use crate::yongeon::Yongeon;
 /// 개입하지 않으면 `None`을 반환하여 규칙 활용 로직으로 위임합니다.
 pub(crate) fn join(yongeon: &Yongeon, eomi: &Eomi) -> Option<String> {
     match yongeon.irregular_type {
+        IrregularType::Dieut => dieut::join(yongeon, eomi),
         IrregularType::Yeo => yeo::join(yongeon, eomi),
         _ => None,
     }

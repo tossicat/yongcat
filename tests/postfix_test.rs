@@ -106,6 +106,45 @@ fn test_postfix_word_command() {
     assert_eq!(postfix_word(ga, &ah_eo::ARA), "가라");
 }
 
+// --- postfix_word: ㄷ불규칙 ---
+//
+// 어간 끝 ㄷ이 모음 어미 앞에서 ㄹ로 바뀌는지 검증합니다.
+
+/// 걷다 + 어요 → 걸어요
+#[test]
+fn test_postfix_word_dieut_ayo() {
+    let yongeons = load_yongeons();
+    let geot = &find_yongeon(&yongeons, "걷다")[0];
+    assert_eq!(postfix_word(geot, &ah_eo::AYO), "걸어요");
+}
+
+/// 듣다 + 어요 → 들어요
+#[test]
+fn test_postfix_word_dieut_deut() {
+    let yongeons = load_yongeons();
+    let deut = &find_yongeon(&yongeons, "듣다")[0];
+    assert_eq!(postfix_word(deut, &ah_eo::AYO), "들어요");
+}
+
+/// 걷다 + 었 → 걸었
+#[test]
+fn test_postfix_word_dieut_past() {
+    let yongeons = load_yongeons();
+    let geot = &find_yongeon(&yongeons, "걷다")[0];
+    assert_eq!(postfix_word(geot, &ah_eo::ASS), "걸었");
+}
+
+/// 묻다03(ㄷ불규칙, 길을 ~) + 어서 → 물어서
+#[test]
+fn test_postfix_word_dieut_reason() {
+    let yongeons = load_yongeons();
+    let mut_da = find_yongeon(&yongeons, "묻다")
+        .into_iter()
+        .find(|y| y.dict_id == "03")
+        .unwrap();
+    assert_eq!(postfix_word(mut_da, &ah_eo::ASEO), "물어서");
+}
+
 // --- postfix_word: 여불규칙 (복합 하다 용언) ---
 //
 // "하다"뿐 아니라 "공부하다", "감사하다" 등 복합 하다 용언도
