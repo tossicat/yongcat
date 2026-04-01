@@ -97,6 +97,16 @@ let result = yongcat::postfix_word(meok, &ah_eo::AYO);
 | `GE` | 게 | 결과 | 먹게, 가게 |
 | `JA` | 자 | 청유 | 먹자, 가자 |
 
+### plain 어미 목록 (받침 유무)
+
+| 상수 | 어미 | 용도 | 예시 (먹다/가다) |
+|------|------|------|------------------|
+| `EUN` | 은/ㄴ | 관형사형 (과거) | 먹은, 가ㄴ |
+| `EUL` | 을/ㄹ | 관형사형 (미래) | 먹을, 가ㄹ |
+| `EUMYEON` | 으면/면 | 조건 | 먹으면, 가면 |
+| `EUNI` | 으니/니 | 이유 | 먹으니, 가니 |
+| `SEUMNIDA` | 습니다/ㅂ니다 | 종결 (합쇼체) | 먹습니다, 가ㅂ니다 |
+
 ### 불규칙 활용 예시
 
 ```rust
@@ -119,6 +129,19 @@ assert_eq!(yongcat::postfix_word(dop, &ah_eo::AYO), "도와요");
 // ㅅ불규칙: 짓다 → 지어요 (축약 억제)
 let jit = &yongcat::find_yongeon(&yongeons, "짓다")[0];
 assert_eq!(yongcat::postfix_word(jit, &ah_eo::AYO), "지어요");
+
+// ㄹ불규칙: 살다 + 는 → 사는 (ㄹ 탈락)
+use yongcat::eomi::fixed;
+let sal = &yongcat::find_yongeon(&yongeons, "살다")[0];
+assert_eq!(yongcat::postfix_word(sal, &fixed::NEUN), "사는");
+
+// 우불규칙: 푸다 → 퍼요
+let pu = &yongcat::find_yongeon(&yongeons, "푸다")[0];
+assert_eq!(yongcat::postfix_word(pu, &ah_eo::AYO), "퍼요");
+
+// 러불규칙: 이르다 → 이르러요
+let ireu = &yongcat::find_yongeon(&yongeons, "이르다")[0];
+assert_eq!(yongcat::postfix_word(ireu, &ah_eo::AYO), "이르러요");
 ```
 
 ## 등급별 컴파일
