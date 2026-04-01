@@ -106,6 +106,51 @@ fn test_postfix_word_command() {
     assert_eq!(postfix_word(ga, &ah_eo::ARA), "가라");
 }
 
+// --- postfix_word: ㅂ불규칙 ---
+//
+// 어간 끝 ㅂ이 우로 바뀌고, 규칙 축약(ㅜ+ㅏ→ㅘ, ㅜ+ㅓ→ㅝ)이 적용됩니다.
+// 돕다/곱다만 양성(와), 나머지는 전부 음성(워)입니다.
+
+/// 돕다(양성, 단음절 ㅗ) + 아요 → 도와요
+#[test]
+fn test_postfix_word_bieut_positive() {
+    let yongeons = load_yongeons();
+    let dop = &find_yongeon(&yongeons, "돕다")[0];
+    assert_eq!(postfix_word(dop, &ah_eo::AYO), "도와요");
+}
+
+/// 춥다(음성) + 어요 → 추워요
+#[test]
+fn test_postfix_word_bieut_negative() {
+    let yongeons = load_yongeons();
+    let chup = &find_yongeon(&yongeons, "춥다")[0];
+    assert_eq!(postfix_word(chup, &ah_eo::AYO), "추워요");
+}
+
+/// 가깝다(다음절, 음성) + 어요 → 가까워요
+#[test]
+fn test_postfix_word_bieut_multi_syllable() {
+    let yongeons = load_yongeons();
+    let gakkap = &find_yongeon(&yongeons, "가깝다")[0];
+    assert_eq!(postfix_word(gakkap, &ah_eo::AYO), "가까워요");
+}
+
+/// 돕다 + 았 → 도왔
+#[test]
+fn test_postfix_word_bieut_past() {
+    let yongeons = load_yongeons();
+    let dop = &find_yongeon(&yongeons, "돕다")[0];
+    assert_eq!(postfix_word(dop, &ah_eo::ASS), "도왔");
+}
+
+/// 아름답다(다음절, 음성) + 어요 → 아름다워요
+#[test]
+fn test_postfix_word_bieut_areumdap() {
+    let yongeons = load_yongeons();
+    let areumdap = &find_yongeon(&yongeons, "아름답다")[0];
+    assert_eq!(postfix_word(areumdap, &ah_eo::AYO), "아름다워요");
+}
+
 // --- postfix_word: ㅡ 탈락 모음조화 ---
 //
 // 다음절 ㅡ 어간은 앞 음절 모음으로 양성/음성을 판별합니다.
