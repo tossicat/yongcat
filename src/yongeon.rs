@@ -98,6 +98,13 @@ impl<'a> Yongeon<'a> {
         }
     }
 
+    /// 모음조화에 따라 AhEoForm에서 적절한 형태를 선택합니다.
+    ///
+    /// 양성모음이면 form.0(아 계열), 음성모음이면 form.1(어 계열)을 반환합니다.
+    pub fn moeum_joha<'b>(&self, form: &'b crate::eomi::AhEoForm) -> &'b str {
+        if self.is_positive_harmony() { form.0 } else { form.1 }
+    }
+
     /// 동사인지 확인합니다.
     pub fn is_verb(&self) -> bool {
         self.yongeon_type.is_verb()

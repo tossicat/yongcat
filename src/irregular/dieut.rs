@@ -18,11 +18,7 @@ pub(super) fn join(yongeon: &Yongeon, eomi: &Eomi) -> Option<String> {
             let last_idx = modified.len() - 1;
             modified[last_idx].coda = Some('ㄹ');
 
-            let suffix = if yongeon.is_positive_vowel() {
-                form.0
-            } else {
-                form.1
-            };
+            let suffix = yongeon.moeum_joha(form);
 
             Some(format!("{}{}", syllable::compose(&modified), suffix))
         }

@@ -24,13 +24,7 @@ pub(crate) fn select(yongeon: &Yongeon, eomi: &Eomi) -> String {
 fn regular(yongeon: &Yongeon, eomi: &Eomi) -> String {
     let eogan = yongeon.eogan_str();
     let suffix = match eomi {
-        Eomi::AhEo(form) => {
-            if yongeon.is_positive_harmony() {
-                form.0
-            } else {
-                form.1
-            }
-        }
+        Eomi::AhEo(form) => yongeon.moeum_joha(form),
         Eomi::Plain(coda, no_coda) => {
             if yongeon.has_coda() {
                 coda

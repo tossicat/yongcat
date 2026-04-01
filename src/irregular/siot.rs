@@ -18,11 +18,7 @@ pub(super) fn join(yongeon: &Yongeon, eomi: &Eomi) -> Option<String> {
         Eomi::AhEo(form) => {
             let stem = stem_without_siot(yongeon);
 
-            let suffix = if yongeon.is_positive_vowel() {
-                form.0
-            } else {
-                form.1
-            };
+            let suffix = yongeon.moeum_joha(form);
 
             Some(format!("{}{}", stem, suffix))
         }
