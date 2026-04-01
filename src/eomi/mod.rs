@@ -7,8 +7,8 @@
 
 pub mod ah_eo;
 
-/// (양성모음 형태, 음성모음 형태, "하다"용 형태)
-pub type AhEoForm = (&'static str, &'static str, &'static str);
+/// (양성모음 형태, 음성모음 형태)
+pub type AhEoForm = (&'static str, &'static str);
 
 /// 어미를 나타내는 열거형입니다.
 ///

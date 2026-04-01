@@ -8,15 +8,27 @@ use crate::eomi::Eomi;
 use crate::syllable;
 use crate::yongeon::Yongeon;
 
+/// 음성모음 어미의 첫 음절 ㅓ→ㅕ 변환으로 여 형태를 생성합니다.
+///
+/// 예: "어요" → "여요", "었" → "였"
+fn to_yeo(eomi: &str) -> String {
+    let mut syllables = syllable::decompose(eomi);
+    syllables[0].vowel = 'ㅕ';
+    let first = syllable::compose(&syllables[..1]);
+    let rest_start = eomi.chars().next().unwrap().len_utf8();
+    format!("{}{}", first, &eomi[rest_start..])
+}
+
 /// 여불규칙의 어간-어미 결합을 처리합니다.
 ///
-/// `AhEo` 어미이면 "여" 형태(form.2)를 선택하여 접합합니다.
+/// `AhEo` 어미이면 음성 형태(form.1)에서 여 형태를 생성하여 접합합니다.
 /// `Plain`/`Fixed` 어미에는 개입하지 않습니다.
 pub(super) fn join(yongeon: &Yongeon, eomi: &Eomi) -> Option<String> {
     match eomi {
         Eomi::AhEo(form) => {
             let eogan = yongeon.eogan_str();
-            Some(format!("{}{}", eogan, form.2))
+            let yeo_form = to_yeo(form.1);
+            Some(format!("{}{}", eogan, yeo_form))
         }
         _ => None,
     }
