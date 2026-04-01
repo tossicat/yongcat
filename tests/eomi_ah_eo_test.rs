@@ -25,6 +25,22 @@ fn siot_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
     Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Siot)
 }
 
+fn rieul_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Rieul)
+}
+
+fn u_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::U)
+}
+
+fn reo_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Reo)
+}
+
+fn eu_adj(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Adjective, IrregularType::Eu)
+}
+
 // --- 규칙 활용 ---
 
 #[test]
@@ -87,4 +103,26 @@ fn test_bieut() {
 #[test]
 fn test_siot() {
     assert_eq!(postfix_word(&siot_verb("짓다", "짓"), &ah_eo::AYO), "지어요");
+}
+
+#[test]
+fn test_rieul() {
+    // ㄹ불규칙은 AhEo에서 규칙 활용과 동일
+    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &ah_eo::AYO), "살아요");
+}
+
+#[test]
+fn test_u() {
+    assert_eq!(postfix_word(&u_verb("푸다", "푸"), &ah_eo::AYO), "퍼요");
+}
+
+#[test]
+fn test_reo() {
+    assert_eq!(postfix_word(&reo_verb("이르다", "이르"), &ah_eo::AYO), "이르러요");
+}
+
+#[test]
+fn test_eu() {
+    // 으불규칙은 규칙 활용의 ㅡ 탈락으로 처리
+    assert_eq!(postfix_word(&eu_adj("바쁘다", "바쁘"), &ah_eo::AYO), "바빠요");
 }

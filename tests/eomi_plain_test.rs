@@ -9,6 +9,22 @@ fn verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
     Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Regular)
 }
 
+fn dieut_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Dieut)
+}
+
+fn bieut_adj(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Adjective, IrregularType::Bieut)
+}
+
+fn siot_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Siot)
+}
+
+fn rieul_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Rieul)
+}
+
 // --- 받침 있는 어간 ---
 
 #[test]
@@ -109,4 +125,66 @@ fn test_eureo_with_coda() {
 #[test]
 fn test_eureo_without_coda() {
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUREO), "가러");
+}
+
+// --- ㄷ불규칙 + Plain ---
+
+#[test]
+fn test_dieut_eumyeon() {
+    // 걷다 + 으면 → 걸으면 (모음 시작 → ㄷ→ㄹ)
+    assert_eq!(postfix_word(&dieut_verb("걷다", "걷"), &plain::EUMYEON), "걸으면");
+}
+
+#[test]
+fn test_dieut_seumnida() {
+    // 걷다 + 습니다 → 걷습니다 (자음 시작 → 변환 없음)
+    assert_eq!(postfix_word(&dieut_verb("걷다", "걷"), &plain::SEUMNIDA), "걷습니다");
+}
+
+// --- ㅂ불규칙 + Plain ---
+
+#[test]
+fn test_bieut_eumyeon() {
+    // 가깝다 + 으면/면 → 가까우면 (ㅂ→우, 무받침형)
+    assert_eq!(postfix_word(&bieut_adj("가깝다", "가깝"), &plain::EUMYEON), "가까우면");
+}
+
+#[test]
+fn test_bieut_seumnida() {
+    // 가깝다 + 습니다 → 가깝습니다 (자음 시작 → 변환 없음)
+    assert_eq!(postfix_word(&bieut_adj("가깝다", "가깝"), &plain::SEUMNIDA), "가깝습니다");
+}
+
+// --- ㅅ불규칙 + Plain ---
+
+#[test]
+fn test_siot_eumyeon() {
+    // 짓다 + 으면/면 → 지면 (ㅅ 탈락, 무받침형)
+    assert_eq!(postfix_word(&siot_verb("짓다", "짓"), &plain::EUMYEON), "지면");
+}
+
+#[test]
+fn test_siot_seumnida() {
+    // 짓다 + 습니다 → 짓습니다 (자음 시작 → 변환 없음)
+    assert_eq!(postfix_word(&siot_verb("짓다", "짓"), &plain::SEUMNIDA), "짓습니다");
+}
+
+// --- ㄹ불규칙 + Plain ---
+
+#[test]
+fn test_rieul_eumyeon() {
+    // 살다 + 으면/면 → 살면 (ㄹ유지, 무받침형)
+    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &plain::EUMYEON), "살면");
+}
+
+#[test]
+fn test_rieul_seumnida() {
+    // 살다 + 습니다/ㅂ니다 → 사ㅂ니다 (ㄹ탈락 before ㅂ)
+    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &plain::SEUMNIDA), "사ㅂ니다");
+}
+
+#[test]
+fn test_rieul_euni() {
+    // 살다 + 으니/니 → 사니 (ㄹ탈락 before ㄴ)
+    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &plain::EUNI), "사니");
 }

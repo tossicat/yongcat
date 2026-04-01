@@ -9,6 +9,10 @@ fn verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
     Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Regular)
 }
 
+fn rieul_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Rieul)
+}
+
 // --- 받침 있는 어간 ---
 
 #[test]
@@ -61,4 +65,33 @@ fn test_ge_without_coda() {
 #[test]
 fn test_ja_without_coda() {
     assert_eq!(postfix_word(&verb("가다", "가"), &fixed::JA), "가자");
+}
+
+// --- ㄹ불규칙 (ㄴ 앞 ㄹ 탈락) ---
+
+#[test]
+fn test_rieul_neun() {
+    // 살다 + 는 → 사는 (ㄹ탈락 before ㄴ)
+    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &fixed::NEUN), "사는");
+}
+
+#[test]
+fn test_rieul_go() {
+    // 살다 + 고 → 살고 (ㄱ은 탈락 대상 아님)
+    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &fixed::GO), "살고");
+}
+
+#[test]
+fn test_rieul_ji() {
+    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &fixed::JI), "살지");
+}
+
+#[test]
+fn test_rieul_ge() {
+    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &fixed::GE), "살게");
+}
+
+#[test]
+fn test_rieul_ja() {
+    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &fixed::JA), "살자");
 }
