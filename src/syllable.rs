@@ -100,6 +100,11 @@ pub fn decompose(s: &str) -> Vec<Syllable> {
     s.chars().filter_map(split).collect()
 }
 
+/// 문자열이 모음으로 시작하는지 확인합니다 (초성이 ㅇ인 경우).
+pub fn starts_with_vowel(s: &str) -> bool {
+    decompose(s).first().map(|syl| syl.onset == 'ㅇ').unwrap_or(false)
+}
+
 /// 음절들을 합성하여 문자열로 만듭니다.
 pub fn compose(syllables: &[Syllable]) -> String {
     syllables.iter().map(join).collect()

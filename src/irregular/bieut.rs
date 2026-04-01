@@ -11,19 +11,12 @@ use crate::yongeon::Yongeon;
 
 /// ㅂ불규칙의 어간-어미 결합을 처리합니다.
 ///
-/// `AhEo` 어미이면 어간 끝 ㅂ을 제거하고 우를 삽입한 뒤,
-/// 특수 모음조화(돕다/곱다만 양성)에 따라 접합합니다.
-/// `Plain`/`Fixed` 어미에는 개입하지 않습니다.
+/// 모음으로 시작하는 어미 앞에서 어간 끝 ㅂ을 제거하고 우를 삽입합니다.
+/// 자음으로 시작하는 어미에는 개입하지 않습니다.
 pub(super) fn join(yongeon: &Yongeon, eomi: &Eomi) -> Option<String> {
     match eomi {
         Eomi::AhEo(form) => {
-            // ㅂ 제거
-            let mut modified = yongeon.eogan.clone();
-            let last_idx = modified.len() - 1;
-            modified[last_idx].coda = None;
-
-            // 우 삽입
-            let wu = Syllable { onset: 'ㅇ', vowel: 'ㅜ', coda: None };
+            let stem = stem_with_wu(yongeon);
 
             // 특수 모음조화: 돕다/곱다(단음절, ㅗ)만 양성
             let suffix = if is_positive_bieut(yongeon) {
@@ -32,12 +25,15 @@ pub(super) fn join(yongeon: &Yongeon, eomi: &Eomi) -> Option<String> {
                 form.1
             };
 
-            Some(format!(
-                "{}{}{}",
-                syllable::compose(&modified),
-                syllable::compose(&[wu]),
-                suffix
-            ))
+            Some(format!("{}{}", stem, suffix))
+        }
+        Eomi::Plain(coda_form, no_coda_form) => {
+            if syllable::starts_with_vowel(coda_form) {
+                let stem = stem_with_wu(yongeon);
+                Some(format!("{}{}", stem, no_coda_form))
+            } else {
+                None
+            }
         }
         _ => None,
     }
@@ -52,6 +48,15 @@ pub(super) fn merge(yongeon: &Yongeon, joined: &str, eomi: &Eomi) -> Option<Stri
         Eomi::AhEo(_) => Some(contract(yongeon, joined)),
         _ => None,
     }
+}
+
+/// 어간 끝 ㅂ을 제거하고 우를 삽입한 문자열을 반환합니다.
+fn stem_with_wu(yongeon: &Yongeon) -> String {
+    let mut modified = yongeon.eogan.clone();
+    let last_idx = modified.len() - 1;
+    modified[last_idx].coda = None;
+    let wu = Syllable { onset: 'ㅇ', vowel: 'ㅜ', coda: None };
+    format!("{}{}", syllable::compose(&modified), syllable::compose(&[wu]))
 }
 
 /// ㅂ불규칙 모음조화: 돕다/곱다(단음절, ㅗ)만 양성입니다.
@@ -131,8 +136,16 @@ mod tests {
     }
 
     #[test]
-    fn test_join_plain() {
-        let result = join(&bieut_verb("돕다", "돕"), &Eomi::Plain("은", "ㄴ"));
+    fn test_join_plain_vowel() {
+        // 돕다 + 으면/면 → 도우면 (모음 시작 → ㅂ→우, 무받침 형태 선택)
+        let result = join(&bieut_verb("돕다", "돕"), &Eomi::Plain("으면", "면"));
+        assert_eq!(result, Some("도우면".to_string()));
+    }
+
+    #[test]
+    fn test_join_plain_consonant() {
+        // 돕다 + 습니다 → 개입 없음 (자음 시작)
+        let result = join(&bieut_verb("돕다", "돕"), &Eomi::Plain("습니다", "ㅂ니다"));
         assert_eq!(result, None);
     }
 
