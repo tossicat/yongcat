@@ -106,6 +106,50 @@ fn test_postfix_word_command() {
     assert_eq!(postfix_word(ga, &ah_eo::ARA), "가라");
 }
 
+// --- postfix_word: ㄹ불규칙 ---
+//
+// ㄴ/ㅂ/ㅅ 앞에서 ㄹ 탈락, Plain은 항상 무받침 형태 선택.
+
+/// 살다 + 아요 → 살아요 (AhEo는 규칙 활용)
+#[test]
+fn test_postfix_word_rieul_ah_eo() {
+    let yongeons = load_yongeons();
+    let sal = &find_yongeon(&yongeons, "살다")[0];
+    assert_eq!(postfix_word(sal, &ah_eo::AYO), "살아요");
+}
+
+/// 살다 + 는 → 사는 (Fixed, ㄹ탈락 before ㄴ)
+#[test]
+fn test_postfix_word_rieul_neun() {
+    let yongeons = load_yongeons();
+    let sal = &find_yongeon(&yongeons, "살다")[0];
+    assert_eq!(postfix_word(sal, &yongcat::eomi::fixed::NEUN), "사는");
+}
+
+/// 살다 + 면 → 살면 (Plain, ㄹ유지)
+#[test]
+fn test_postfix_word_rieul_myeon() {
+    let yongeons = load_yongeons();
+    let sal = &find_yongeon(&yongeons, "살다")[0];
+    assert_eq!(postfix_word(sal, &yongcat::eomi::plain::EUMYEON), "살면");
+}
+
+/// 만들다 + 는 → 만드는 (다음절, ㄹ탈락)
+#[test]
+fn test_postfix_word_rieul_multi_syllable() {
+    let yongeons = load_yongeons();
+    let mandeul = &find_yongeon(&yongeons, "만들다")[0];
+    assert_eq!(postfix_word(mandeul, &yongcat::eomi::fixed::NEUN), "만드는");
+}
+
+/// 알다 + 니 → 아니 (Plain, ㄹ탈락 before ㄴ)
+#[test]
+fn test_postfix_word_rieul_euni() {
+    let yongeons = load_yongeons();
+    let al = &find_yongeon(&yongeons, "알다")[0];
+    assert_eq!(postfix_word(al, &yongcat::eomi::plain::EUNI), "아니");
+}
+
 // --- postfix_word: ㅅ불규칙 ---
 //
 // 어간 끝 ㅅ이 탈락하고, 모음 축약이 적용되지 않습니다.

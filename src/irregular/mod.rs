@@ -6,6 +6,7 @@
 
 pub mod bieut;
 pub mod dieut;
+pub mod rieul;
 pub mod siot;
 pub mod yeo;
 
@@ -21,6 +22,7 @@ pub(crate) fn join(yongeon: &Yongeon, eomi: &Eomi) -> Option<String> {
     match yongeon.irregular_type {
         IrregularType::Bieut => bieut::join(yongeon, eomi),
         IrregularType::Dieut => dieut::join(yongeon, eomi),
+        IrregularType::Rieul => rieul::join(yongeon, eomi),
         IrregularType::Siot => siot::join(yongeon, eomi),
         IrregularType::Yeo => yeo::join(yongeon, eomi),
         _ => None,
