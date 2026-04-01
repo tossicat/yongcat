@@ -6,6 +6,7 @@
 //! 이는 이전 `tossicat`에서 조사의 (&str, &str, &str) 튜플 컨벤션과 동일한 아이디어입니다.
 
 pub mod ah_eo;
+pub mod fixed;
 
 /// (양성모음 형태, 음성모음 형태)
 pub type AhEoForm = (&'static str, &'static str);
