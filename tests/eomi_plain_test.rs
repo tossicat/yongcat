@@ -62,3 +62,51 @@ fn test_euni_without_coda() {
 fn test_seumnida_without_coda() {
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::SEUMNIDA), "가ㅂ니다");
 }
+
+// --- 으면서/면서 ---
+
+#[test]
+fn test_eumyeonseo_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUMYEONSEO), "먹으면서");
+}
+
+#[test]
+fn test_eumyeonseo_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUMYEONSEO), "가면서");
+}
+
+// --- 으려고/려고 ---
+
+#[test]
+fn test_euryeogo_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EURYEOGO), "먹으려고");
+}
+
+#[test]
+fn test_euryeogo_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EURYEOGO), "가려고");
+}
+
+// --- 으세요/세요 ---
+
+#[test]
+fn test_euseyo_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUSEYO), "먹으세요");
+}
+
+#[test]
+fn test_euseyo_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUSEYO), "가세요");
+}
+
+// --- 으러/러 ---
+
+#[test]
+fn test_eureo_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUREO), "먹으러");
+}
+
+#[test]
+fn test_eureo_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUREO), "가러");
+}
