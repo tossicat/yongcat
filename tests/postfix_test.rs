@@ -106,6 +106,42 @@ fn test_postfix_word_command() {
     assert_eq!(postfix_word(ga, &ah_eo::ARA), "가라");
 }
 
+// --- postfix_word: 으불규칙 ---
+//
+// 규칙 활용의 ㅡ 탈락/모음조화로 처리됩니다 (별도 불규칙 모듈 불필요).
+
+/// 잠그다 + 아요 → 잠가요 (앞 음절 ㅏ 양성)
+#[test]
+fn test_postfix_word_eu_jamgeu() {
+    let yongeons = load_yongeons();
+    let jamgeu = &find_yongeon(&yongeons, "잠그다")[0];
+    assert_eq!(postfix_word(jamgeu, &ah_eo::AYO), "잠가요");
+}
+
+/// 끄다 + 어요 → 꺼요 (단음절 음성)
+#[test]
+fn test_postfix_word_eu_kkeu() {
+    let yongeons = load_yongeons();
+    let kkeu = &find_yongeon(&yongeons, "끄다")[0];
+    assert_eq!(postfix_word(kkeu, &ah_eo::AYO), "꺼요");
+}
+
+/// 슬프다 + 어요 → 슬퍼요 (앞 음절 ㅡ→ㅓ 음성)
+#[test]
+fn test_postfix_word_eu_seulpeu() {
+    let yongeons = load_yongeons();
+    let seulpeu = &find_yongeon(&yongeons, "슬프다")[0];
+    assert_eq!(postfix_word(seulpeu, &ah_eo::AYO), "슬퍼요");
+}
+
+/// 아프다 + 았 → 아팠 (앞 음절 ㅏ 양성 과거)
+#[test]
+fn test_postfix_word_eu_apeu_past() {
+    let yongeons = load_yongeons();
+    let apeu = &find_yongeon(&yongeons, "아프다")[0];
+    assert_eq!(postfix_word(apeu, &ah_eo::ASS), "아팠");
+}
+
 // --- postfix_word: 러불규칙 ---
 //
 // 어미 "어"가 "러"로 바뀌고, ㅡ 탈락 없이 어간이 유지됩니다.

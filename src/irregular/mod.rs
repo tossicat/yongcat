@@ -6,6 +6,7 @@
 
 pub mod bieut;
 pub mod dieut;
+pub mod eu;
 pub mod reo;
 pub mod rieul;
 pub mod siot;
