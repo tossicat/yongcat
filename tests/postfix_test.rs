@@ -106,6 +106,40 @@ fn test_postfix_word_command() {
     assert_eq!(postfix_word(ga, &ah_eo::ARA), "가라");
 }
 
+// --- postfix_word: 러불규칙 ---
+//
+// 어미 "어"가 "러"로 바뀌고, ㅡ 탈락 없이 어간이 유지됩니다.
+
+/// 이르다01(도착하다) + 어요 → 이르러요
+#[test]
+fn test_postfix_word_reo_ayo() {
+    let yongeons = load_yongeons();
+    let ireu = find_yongeon(&yongeons, "이르다")
+        .into_iter()
+        .find(|y| y.dict_id == "01")
+        .unwrap();
+    assert_eq!(postfix_word(ireu, &ah_eo::AYO), "이르러요");
+}
+
+/// 이르다01 + 었 → 이르렀
+#[test]
+fn test_postfix_word_reo_past() {
+    let yongeons = load_yongeons();
+    let ireu = find_yongeon(&yongeons, "이르다")
+        .into_iter()
+        .find(|y| y.dict_id == "01")
+        .unwrap();
+    assert_eq!(postfix_word(ireu, &ah_eo::ASS), "이르렀");
+}
+
+/// 푸르다 + 어요 → 푸르러요
+#[test]
+fn test_postfix_word_reo_pureu() {
+    let yongeons = load_yongeons();
+    let pureu = &find_yongeon(&yongeons, "푸르다")[0];
+    assert_eq!(postfix_word(pureu, &ah_eo::AYO), "푸르러요");
+}
+
 // --- postfix_word: 우불규칙 ---
 //
 // 푸다 하나만 해당. ㅜ가 어미 첫 모음으로 대체됩니다.
