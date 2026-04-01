@@ -106,6 +106,34 @@ fn test_postfix_word_command() {
     assert_eq!(postfix_word(ga, &ah_eo::ARA), "가라");
 }
 
+// --- postfix_word: ㅡ 탈락 모음조화 ---
+//
+// 다음절 ㅡ 어간은 앞 음절 모음으로 양성/음성을 판별합니다.
+
+/// 바쁘다: 앞 음절 바(ㅏ, 양성) → 아요 → 바빠요
+#[test]
+fn test_postfix_word_eu_positive() {
+    let yongeons = load_yongeons();
+    let bba = &find_yongeon(&yongeons, "바쁘다")[0];
+    assert_eq!(postfix_word(bba, &ah_eo::AYO), "바빠요");
+}
+
+/// 예쁘다: 앞 음절 예(ㅔ, 음성) → 어요 → 예뻐요
+#[test]
+fn test_postfix_word_eu_negative() {
+    let yongeons = load_yongeons();
+    let yye = &find_yongeon(&yongeons, "예쁘다")[0];
+    assert_eq!(postfix_word(yye, &ah_eo::AYO), "예뻐요");
+}
+
+/// 바쁘다 과거: 바쁘 + 았 → 바빴
+#[test]
+fn test_postfix_word_eu_positive_past() {
+    let yongeons = load_yongeons();
+    let bba = &find_yongeon(&yongeons, "바쁘다")[0];
+    assert_eq!(postfix_word(bba, &ah_eo::ASS), "바빴");
+}
+
 // --- postfix_word: ㄷ불규칙 ---
 //
 // 어간 끝 ㄷ이 모음 어미 앞에서 ㄹ로 바뀌는지 검증합니다.

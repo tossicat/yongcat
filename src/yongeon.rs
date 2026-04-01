@@ -85,6 +85,19 @@ impl<'a> Yongeon<'a> {
         self.last_syllable().is_positive_vowel()
     }
 
+    /// 아/어 계열 어미 선택을 위한 모음조화를 판별합니다.
+    ///
+    /// 어간 마지막 모음이 ㅡ이고 다음절이면 앞 음절 모음으로 판별합니다.
+    /// 예: 바쁘다 → 바(ㅏ, 양성), 예쁘다 → 예(ㅔ, 음성)
+    pub fn is_positive_harmony(&self) -> bool {
+        let last = self.last_syllable();
+        if last.vowel == 'ㅡ' && self.eogan.len() > 1 {
+            self.eogan[self.eogan.len() - 2].is_positive_vowel()
+        } else {
+            last.is_positive_vowel()
+        }
+    }
+
     /// 동사인지 확인합니다.
     pub fn is_verb(&self) -> bool {
         self.yongeon_type.is_verb()

@@ -68,7 +68,7 @@ fn contract_ah_eo(yongeon: &Yongeon, joined: &str) -> String {
         'ㅗ' => 'ㅘ', // ㅗ+ㅏ → ㅘ
         'ㅜ' => 'ㅝ', // ㅜ+ㅓ → ㅝ
         'ㅣ' => 'ㅕ', // ㅣ+ㅓ → ㅕ
-        'ㅡ' => 'ㅓ', // ㅡ+ㅓ → ㅓ (ㅡ 탈락)
+        'ㅡ' => eomi_first.vowel, // ㅡ 탈락: 어미 첫 모음으로 대체
         _ => return joined.to_string(),
     };
 
