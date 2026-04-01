@@ -7,6 +7,7 @@
 
 pub mod ah_eo;
 pub mod fixed;
+pub mod plain;
 
 /// (양성모음 형태, 음성모음 형태)
 pub type AhEoForm = (&'static str, &'static str);
