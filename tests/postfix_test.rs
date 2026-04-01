@@ -106,6 +106,26 @@ fn test_postfix_word_command() {
     assert_eq!(postfix_word(ga, &ah_eo::ARA), "가라");
 }
 
+// --- postfix_word: 우불규칙 ---
+//
+// 푸다 하나만 해당. ㅜ가 어미 첫 모음으로 대체됩니다.
+
+/// 푸다 + 어요 → 퍼요
+#[test]
+fn test_postfix_word_u_ayo() {
+    let yongeons = load_yongeons();
+    let pu = &find_yongeon(&yongeons, "푸다")[0];
+    assert_eq!(postfix_word(pu, &ah_eo::AYO), "퍼요");
+}
+
+/// 푸다 + 었 → 펐
+#[test]
+fn test_postfix_word_u_past() {
+    let yongeons = load_yongeons();
+    let pu = &find_yongeon(&yongeons, "푸다")[0];
+    assert_eq!(postfix_word(pu, &ah_eo::ASS), "펐");
+}
+
 // --- postfix_word: ㄹ불규칙 ---
 //
 // ㄴ/ㅂ/ㅅ 앞에서 ㄹ 탈락, Plain은 항상 무받침 형태 선택.

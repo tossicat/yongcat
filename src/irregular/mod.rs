@@ -8,6 +8,7 @@ pub mod bieut;
 pub mod dieut;
 pub mod rieul;
 pub mod siot;
+pub mod u;
 pub mod yeo;
 
 use crate::eomi::Eomi;
@@ -37,6 +38,7 @@ pub(crate) fn merge(yongeon: &Yongeon, joined: &str, eomi: &Eomi) -> Option<Stri
     match yongeon.irregular_type {
         IrregularType::Bieut => bieut::merge(yongeon, joined, eomi),
         IrregularType::Siot => siot::merge(yongeon, joined, eomi),
+        IrregularType::U => u::merge(yongeon, joined, eomi),
         IrregularType::Yeo => yeo::merge(yongeon, joined, eomi),
         _ => None,
     }
