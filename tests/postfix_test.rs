@@ -106,6 +106,45 @@ fn test_postfix_word_command() {
     assert_eq!(postfix_word(ga, &ah_eo::ARA), "가라");
 }
 
+// --- postfix_word: ㅅ불규칙 ---
+//
+// 어간 끝 ㅅ이 탈락하고, 모음 축약이 적용되지 않습니다.
+
+/// 짓다 + 어요 → 지어요 (져요가 아님)
+#[test]
+fn test_postfix_word_siot_ayo() {
+    let yongeons = load_yongeons();
+    let jit = &find_yongeon(&yongeons, "짓다")[0];
+    assert_eq!(postfix_word(jit, &ah_eo::AYO), "지어요");
+}
+
+/// 낫다01(동사, 병이~) + 아요 → 나아요 (나요가 아님)
+#[test]
+fn test_postfix_word_siot_positive() {
+    let yongeons = load_yongeons();
+    let nat = find_yongeon(&yongeons, "낫다")
+        .into_iter()
+        .find(|y| y.dict_id == "01")
+        .unwrap();
+    assert_eq!(postfix_word(nat, &ah_eo::AYO), "나아요");
+}
+
+/// 짓다 + 었 → 지었
+#[test]
+fn test_postfix_word_siot_past() {
+    let yongeons = load_yongeons();
+    let jit = &find_yongeon(&yongeons, "짓다")[0];
+    assert_eq!(postfix_word(jit, &ah_eo::ASS), "지었");
+}
+
+/// 농사짓다 + 어요 → 농사지어요
+#[test]
+fn test_postfix_word_siot_multi_syllable() {
+    let yongeons = load_yongeons();
+    let nongsa = &find_yongeon(&yongeons, "농사짓다")[0];
+    assert_eq!(postfix_word(nongsa, &ah_eo::AYO), "농사지어요");
+}
+
 // --- postfix_word: ㅂ불규칙 ---
 //
 // 어간 끝 ㅂ이 우로 바뀌고, 규칙 축약(ㅜ+ㅏ→ㅘ, ㅜ+ㅓ→ㅝ)이 적용됩니다.

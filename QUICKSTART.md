@@ -115,6 +115,10 @@ assert_eq!(yongcat::postfix_word(geot, &ah_eo::AYO), "걸어요");
 // ㅂ불규칙: 돕다 → 도와요
 let dop = &yongcat::find_yongeon(&yongeons, "돕다")[0];
 assert_eq!(yongcat::postfix_word(dop, &ah_eo::AYO), "도와요");
+
+// ㅅ불규칙: 짓다 → 지어요 (축약 억제)
+let jit = &yongcat::find_yongeon(&yongeons, "짓다")[0];
+assert_eq!(yongcat::postfix_word(jit, &ah_eo::AYO), "지어요");
 ```
 
 ## 등급별 컴파일

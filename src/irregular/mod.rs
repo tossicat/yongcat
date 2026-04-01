@@ -6,6 +6,7 @@
 
 pub mod bieut;
 pub mod dieut;
+pub mod siot;
 pub mod yeo;
 
 use crate::eomi::Eomi;
@@ -20,6 +21,7 @@ pub(crate) fn join(yongeon: &Yongeon, eomi: &Eomi) -> Option<String> {
     match yongeon.irregular_type {
         IrregularType::Bieut => bieut::join(yongeon, eomi),
         IrregularType::Dieut => dieut::join(yongeon, eomi),
+        IrregularType::Siot => siot::join(yongeon, eomi),
         IrregularType::Yeo => yeo::join(yongeon, eomi),
         _ => None,
     }
@@ -32,6 +34,7 @@ pub(crate) fn join(yongeon: &Yongeon, eomi: &Eomi) -> Option<String> {
 pub(crate) fn merge(yongeon: &Yongeon, joined: &str, eomi: &Eomi) -> Option<String> {
     match yongeon.irregular_type {
         IrregularType::Bieut => bieut::merge(yongeon, joined, eomi),
+        IrregularType::Siot => siot::merge(yongeon, joined, eomi),
         IrregularType::Yeo => yeo::merge(yongeon, joined, eomi),
         _ => None,
     }
