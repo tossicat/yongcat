@@ -324,6 +324,144 @@ fn test_postfix_word_bieut_areumdap() {
     assert_eq!(postfix_word(areumdap, &ah_eo::AYO), "아름다워요");
 }
 
+// --- postfix_word: ㅎ불규칙 ---
+//
+// 어간 끝 ㅎ이 모음 어미 앞에서 탈락하고,
+// 아/어 계열 어미와 만나면 어간 끝 모음이 ㅐ로 축약됩니다.
+
+/// 그렇다(음성) + 어요 → 그래요
+#[test]
+fn test_postfix_word_hieut_negative() {
+    let yongeons = load_yongeons();
+    let geureot = &find_yongeon(&yongeons, "그렇다")[0];
+    assert_eq!(postfix_word(geureot, &ah_eo::AYO), "그래요");
+}
+
+/// 노랗다(양성) + 아요 → 노래요
+#[test]
+fn test_postfix_word_hieut_positive() {
+    let yongeons = load_yongeons();
+    let norat = &find_yongeon(&yongeons, "노랗다")[0];
+    assert_eq!(postfix_word(norat, &ah_eo::AYO), "노래요");
+}
+
+/// 그렇다 + 었 → 그랬
+#[test]
+fn test_postfix_word_hieut_past() {
+    let yongeons = load_yongeons();
+    let geureot = &find_yongeon(&yongeons, "그렇다")[0];
+    assert_eq!(postfix_word(geureot, &ah_eo::ASS), "그랬");
+}
+
+/// 하얗다(양성) + 아서 → 하얘서
+#[test]
+fn test_postfix_word_hieut_reason() {
+    let yongeons = load_yongeons();
+    let hayat = &find_yongeon(&yongeons, "하얗다")[0];
+    assert_eq!(postfix_word(hayat, &ah_eo::ASEO), "하얘서");
+}
+
+/// 어떻다(음성) + 어요 → 어때요
+#[test]
+fn test_postfix_word_hieut_eotteo() {
+    let yongeons = load_yongeons();
+    let eotteo = &find_yongeon(&yongeons, "어떻다")[0];
+    assert_eq!(postfix_word(eotteo, &ah_eo::AYO), "어때요");
+}
+
+/// 까맣다(양성) + 았 → 까맸
+#[test]
+fn test_postfix_word_hieut_kkamah_past() {
+    let yongeons = load_yongeons();
+    let kkamah = &find_yongeon(&yongeons, "까맣다")[0];
+    assert_eq!(postfix_word(kkamah, &ah_eo::ASS), "까맸");
+}
+
+/// 이렇다 + 으면 → 이러면 (Plain, ㅎ 탈락)
+#[test]
+fn test_postfix_word_hieut_plain() {
+    let yongeons = load_yongeons();
+    let ireot = &find_yongeon(&yongeons, "이렇다")[0];
+    assert_eq!(postfix_word(ireot, &yongcat::eomi::plain::EUMYEON), "이러면");
+}
+
+/// 그렇다 + 고 → 그렇고 (Fixed, 변환 없음)
+#[test]
+fn test_postfix_word_hieut_fixed() {
+    let yongeons = load_yongeons();
+    let geureot = &find_yongeon(&yongeons, "그렇다")[0];
+    assert_eq!(postfix_word(geureot, &yongcat::eomi::fixed::GO), "그렇고");
+}
+
+// --- postfix_word: 르불규칙 ---
+//
+// 어간 끝 르가 분리되어 ㄹ이 앞 음절 받침으로 삽입되고,
+// 어미 첫 초성이 ㄹ로 바뀝니다.
+
+/// 모르다(양성) + 아요 → 몰라요
+#[test]
+fn test_postfix_word_reu_positive() {
+    let yongeons = load_yongeons();
+    let moreu = &find_yongeon(&yongeons, "모르다")[0];
+    assert_eq!(postfix_word(moreu, &ah_eo::AYO), "몰라요");
+}
+
+/// 기르다(음성) + 어요 → 길러요
+#[test]
+fn test_postfix_word_reu_negative() {
+    let yongeons = load_yongeons();
+    let gireu = &find_yongeon(&yongeons, "기르다")[0];
+    assert_eq!(postfix_word(gireu, &ah_eo::AYO), "길러요");
+}
+
+/// 모르다 + 았 → 몰랐
+#[test]
+fn test_postfix_word_reu_past() {
+    let yongeons = load_yongeons();
+    let moreu = &find_yongeon(&yongeons, "모르다")[0];
+    assert_eq!(postfix_word(moreu, &ah_eo::ASS), "몰랐");
+}
+
+/// 빠르다(양성) + 아요 → 빨라요
+#[test]
+fn test_postfix_word_reu_adj() {
+    let yongeons = load_yongeons();
+    let bbareu = &find_yongeon(&yongeons, "빠르다")[0];
+    assert_eq!(postfix_word(bbareu, &ah_eo::AYO), "빨라요");
+}
+
+/// 떠오르다(다음절) + 아요 → 떠올라요
+#[test]
+fn test_postfix_word_reu_multi_syllable() {
+    let yongeons = load_yongeons();
+    let tteoreu = &find_yongeon(&yongeons, "떠오르다")[0];
+    assert_eq!(postfix_word(tteoreu, &ah_eo::AYO), "떠올라요");
+}
+
+/// 다르다 + 아서 → 달라서
+#[test]
+fn test_postfix_word_reu_reason() {
+    let yongeons = load_yongeons();
+    let dareu = &find_yongeon(&yongeons, "다르다")[0];
+    assert_eq!(postfix_word(dareu, &ah_eo::ASEO), "달라서");
+}
+
+/// 모르다 + 면 → 모르면 (Plain, 변환 없음)
+#[test]
+fn test_postfix_word_reu_plain() {
+    let yongeons = load_yongeons();
+    let moreu = &find_yongeon(&yongeons, "모르다")[0];
+    assert_eq!(postfix_word(moreu, &yongcat::eomi::plain::EUMYEON), "모르면");
+}
+
+/// 모르다 + 고 → 모르고 (Fixed, 변환 없음)
+#[test]
+fn test_postfix_word_reu_fixed() {
+    let yongeons = load_yongeons();
+    let moreu = &find_yongeon(&yongeons, "모르다")[0];
+    assert_eq!(postfix_word(moreu, &yongcat::eomi::fixed::GO), "모르고");
+}
+
 // --- postfix_word: ㅡ 탈락 모음조화 ---
 //
 // 다음절 ㅡ 어간은 앞 음절 모음으로 양성/음성을 판별합니다.

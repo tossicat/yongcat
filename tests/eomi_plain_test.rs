@@ -25,6 +25,10 @@ fn rieul_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
     Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Rieul)
 }
 
+fn hieut_adj(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Adjective, IrregularType::Hieut)
+}
+
 // --- 받침 있는 어간 ---
 
 #[test]
@@ -187,4 +191,24 @@ fn test_rieul_seumnida() {
 fn test_rieul_euni() {
     // 살다 + 으니/니 → 사니 (ㄹ탈락 before ㄴ)
     assert_eq!(postfix_word(&rieul_verb("살다", "살"), &plain::EUNI), "사니");
+}
+
+// --- ㅎ불규칙 + Plain ---
+
+#[test]
+fn test_hieut_eumyeon() {
+    // 그렇다 + 으면/면 → 그러면 (ㅎ 탈락, 무받침형)
+    assert_eq!(postfix_word(&hieut_adj("그렇다", "그렇"), &plain::EUMYEON), "그러면");
+}
+
+#[test]
+fn test_hieut_eun() {
+    // 그렇다 + 은/ㄴ → 그러ㄴ (ㅎ 탈락, 무받침형)
+    assert_eq!(postfix_word(&hieut_adj("그렇다", "그렇"), &plain::EUN), "그러ㄴ");
+}
+
+#[test]
+fn test_hieut_seumnida() {
+    // 그렇다 + 습니다 → 그렇습니다 (자음 시작 → 변환 없음)
+    assert_eq!(postfix_word(&hieut_adj("그렇다", "그렇"), &plain::SEUMNIDA), "그렇습니다");
 }

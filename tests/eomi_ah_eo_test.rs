@@ -37,6 +37,14 @@ fn reo_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
     Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Reo)
 }
 
+fn hieut_adj(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Adjective, IrregularType::Hieut)
+}
+
+fn reu_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Reu)
+}
+
 fn eu_adj(base: &'static str, eogan: &str) -> Yongeon<'static> {
     Yongeon::new(base, "", eogan, YongeonType::Adjective, IrregularType::Eu)
 }
@@ -119,6 +127,26 @@ fn test_u() {
 #[test]
 fn test_reo() {
     assert_eq!(postfix_word(&reo_verb("이르다", "이르"), &ah_eo::AYO), "이르러요");
+}
+
+#[test]
+fn test_hieut_negative() {
+    assert_eq!(postfix_word(&hieut_adj("그렇다", "그렇"), &ah_eo::AYO), "그래요");
+}
+
+#[test]
+fn test_hieut_positive() {
+    assert_eq!(postfix_word(&hieut_adj("노랗다", "노랗"), &ah_eo::AYO), "노래요");
+}
+
+#[test]
+fn test_reu_positive() {
+    assert_eq!(postfix_word(&reu_verb("모르다", "모르"), &ah_eo::AYO), "몰라요");
+}
+
+#[test]
+fn test_reu_negative() {
+    assert_eq!(postfix_word(&reu_verb("기르다", "기르"), &ah_eo::AYO), "길러요");
 }
 
 #[test]
