@@ -26,3 +26,14 @@ pub enum Eomi {
     /// 형태가 고정된 어미입니다.
     Fixed(&'static str),
 }
+
+impl Eomi {
+    /// 주어진 문자열이 이 어미의 형태 중 하나와 일치하는지 확인합니다.
+    pub fn matches(&self, s: &str) -> bool {
+        match self {
+            Eomi::AhEo(form) => form.0 == s || form.1 == s,
+            Eomi::Plain(a, b) => *a == s || *b == s,
+            Eomi::Fixed(a) => *a == s,
+        }
+    }
+}

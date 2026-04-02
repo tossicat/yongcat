@@ -22,6 +22,20 @@ pub use types::{IrregularType, YongeonType};
 pub use yongeon::Yongeon;
 
 include!(concat!(env!("OUT_DIR"), "/yong_data.rs"));
+include!(concat!(env!("OUT_DIR"), "/eomi_data.rs"));
+
+/// 어미 목록에서 형태가 일치하는 어미를 찾습니다.
+/// 하나의 어미가 여러 형태를 가질 수 있으므로 `Vec`으로 반환합니다.
+pub fn find_eomi<'a>(
+    eomis: &'a [(&'static str, &'static Eomi)],
+    s: &str,
+) -> Vec<(&'static str, &'a Eomi)> {
+    eomis
+        .iter()
+        .filter(|(_, eomi)| eomi.matches(s))
+        .map(|(name, eomi)| (*name, *eomi))
+        .collect()
+}
 
 /// 용언 목록에서 기본형이 일치하는 용언을 찾습니다.
 /// 동음이의어가 있을 수 있으므로 `Vec`으로 용언 둘 이상을 반환합니다.

@@ -4,18 +4,69 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 
 const CSV_PATH: &str = "data/yong_list.csv";
-const OUT_FILE: &str = "yong_data.rs";
+const YONG_OUT_FILE: &str = "yong_data.rs";
+const EOMI_OUT_FILE: &str = "eomi_data.rs";
+
+const EOMI_SOURCES: &[(&str, &str)] = &[
+    ("src/eomi/ah_eo.rs", "eomi::ah_eo"),
+    ("src/eomi/fixed.rs", "eomi::fixed"),
+    ("src/eomi/plain.rs", "eomi::plain"),
+];
 
 fn main() {
     println!("cargo:rerun-if-changed={}", CSV_PATH);
+    for (path, _) in EOMI_SOURCES {
+        println!("cargo:rerun-if-changed={}", path);
+    }
 
+    build_yong_data();
+    build_eomi_data();
+}
+
+fn build_eomi_data() {
+    let out_dir = env::var("OUT_DIR").unwrap();
+    let dest_path = Path::new(&out_dir).join(EOMI_OUT_FILE);
+
+    let mut entries = Vec::new();
+
+    for (path, module) in EOMI_SOURCES {
+        let content = fs::read_to_string(path)
+            .unwrap_or_else(|_| panic!("{}를 읽을 수 없습니다", path));
+
+        for line in content.lines() {
+            let trimmed = line.trim();
+            if trimmed.starts_with("pub const ") && trimmed.contains(": Eomi") {
+                let name = trimmed
+                    .strip_prefix("pub const ")
+                    .unwrap()
+                    .split(':')
+                    .next()
+                    .unwrap()
+                    .trim();
+                entries.push(format!(
+                    "        (\"{}\", &{}::{}),",
+                    name, module, name
+                ));
+            }
+        }
+    }
+
+    let code = format!(
+        "pub fn load_eomis() -> Vec<(&'static str, &'static Eomi)> {{\n    vec![\n{}\n    ]\n}}\n",
+        entries.join("\n")
+    );
+
+    fs::write(&dest_path, code).unwrap();
+}
+
+fn build_yong_data() {
     let grade_a = env::var("CARGO_FEATURE_GRADE_A").is_ok();
     let grade_b = env::var("CARGO_FEATURE_GRADE_B").is_ok();
     let grade_c = env::var("CARGO_FEATURE_GRADE_C").is_ok();
     let filter_grade = grade_a || grade_b || grade_c;
 
     let out_dir = env::var("OUT_DIR").unwrap();
-    let dest_path = Path::new(&out_dir).join(OUT_FILE);
+    let dest_path = Path::new(&out_dir).join(YONG_OUT_FILE);
 
     let file = fs::File::open(CSV_PATH)
         .unwrap_or_else(|_| panic!("{}를 열 수 없습니다", CSV_PATH));
