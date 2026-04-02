@@ -15,18 +15,19 @@ yongcat/
 ├── data/
 │   └── yong_list.csv          # 용언 1,721개
 ├── tests/
-│   ├── eomi_ah_eo_test.rs     # 아/어 계열 어미 테스트 (12개)
-│   ├── eomi_fixed_test.rs     # 고정 형태 어미 테스트 (10개)
-│   ├── eomi_plain_test.rs     # 받침 유무 어미 테스트 (10개)
+│   ├── eomi_ah_eo_test.rs     # 아/어 계열 어미 테스트 (16개)
+│   ├── eomi_find_test.rs      # 어미 검색 테스트 (7개)
+│   ├── eomi_fixed_test.rs     # 고정 형태 어미 테스트 (15개)
+│   ├── eomi_plain_test.rs     # 받침 유무 어미 테스트 (27개)
 │   ├── postfix_test.rs        # 활용 파이프라인 통합 테스트 (48개)
 │   └── yongeon_test.rs        # 용언 검색 통합 테스트 (7개)
 └── src/
-    ├── lib.rs                 # 크레이트 루트, find_yongeon, find_eogan, postfix, postfix_word
+    ├── lib.rs                 # 크레이트 루트, find_yongeon, find_eogan, find_eomi, postfix, postfix_word
     ├── eomi/
-    │   ├── mod.rs             # Eomi 열거형, AhEoForm 타입 (2-튜플)
-    │   ├── ah_eo.rs           # 아/어 계열 어미 상수 7개
-    │   ├── fixed.rs           # 고정 형태 어미 상수 5개
-    │   └── plain.rs           # 받침 유무 어미 상수 5개
+    │   ├── mod.rs             # Eomi 열거형, AhEoForm 타입 (2-튜플), Eomi::matches()
+    │   ├── ah_eo.rs           # 아/어 계열 어미 상수 9개
+    │   ├── fixed.rs           # 고정 형태 어미 상수 7개
+    │   └── plain.rs           # 받침 유무 어미 상수 10개
     ├── irregular/
     │   ├── mod.rs             # 불규칙 유형별 디스패치
     │   ├── yeo.rs             # 여불규칙
@@ -63,9 +64,9 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 
 | 유형 | 파일 | 상수 |
 |------|------|------|
-| AhEo (아/어 계열) | `ah_eo.rs` | A, AYO, ASEO, ADO, AYA, ARA, ASS (7개) |
-| Fixed (고정 형태) | `fixed.rs` | GO, JI, NEUN, GE, JA (5개) |
-| Plain (받침 유무) | `plain.rs` | EUN, EUL, EUMYEON, EUNI, SEUMNIDA (5개) |
+| AhEo (아/어 계열) | `ah_eo.rs` | A, AYO, ASEO, ADO, AYA, ARA, ASS, ASS_EOYO, ASS_SEUMNIDA (9개) |
+| Fixed (고정 형태) | `fixed.rs` | GO, JI, NEUN, GE, JA, GESS_EOYO, GESS_SEUMNIDA (7개) |
+| Plain (받침 유무) | `plain.rs` | EUN, EUL, EUMYEON, EUNI, SEUMNIDA, EUMYEONSEO, EURYEOGO, EUSEYO, EUREO, EUSYEOSS (10개) |
 
 `AhEoForm`은 2-튜플 `(양성, 음성)`입니다. 여불규칙의 여 형태는 음성 형태에서 ㅓ→ㅕ 변환으로 생성합니다.
 
@@ -94,14 +95,16 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 
 ### 기타
 
-- `build.rs`: CSV → `load_yongeons()` 코드 생성, 등급 필터링
+- `build.rs`: CSV → `load_yongeons()`, 소스 파싱 → `load_eomis()` 코드 생성, 등급 필터링
 - `syllable.rs`: 한글 유니코드 분해/합성, `starts_with_vowel()`, 외부 의존성 없음
 - `Yongeon::new()`: 빈 어간 assert 포함
 - `Yongeon::moeum_joha()`: 모음조화 판별 통일 메서드
+- `Eomi::matches()`: 문자열 매칭 메서드
+- `find_eomi()`: 어미 문자열 검색
 
 ## 테스트 현황
 
-총 176개 테스트 통과
+총 209개 테스트 통과
 
 | 위치 | 테스트 수 | 내용 |
 |------|-----------|------|
@@ -116,9 +119,10 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 | `irregular/rieul.rs` | 9개 | join × AhEo/Plain5종/Fixed2종/다음절 |
 | `irregular/u.rs` | 3개 | merge × AhEo/Past/Plain |
 | `irregular/reo.rs` | 5개 | join/merge × AhEo/Past/Plain |
-| `tests/eomi_ah_eo_test.rs` | 12개 | 규칙 8 + 불규칙 4 |
-| `tests/eomi_fixed_test.rs` | 10개 | 상수 5 × 받침 유무 |
-| `tests/eomi_plain_test.rs` | 10개 | 상수 5 × 받침 유무 |
+| `tests/eomi_ah_eo_test.rs` | 16개 | 규칙 8 + 불규칙 8 |
+| `tests/eomi_find_test.rs` | 7개 | load_eomis 개수, find_eomi 검색 |
+| `tests/eomi_fixed_test.rs` | 15개 | 상수 × 받침 유무 + ㄹ불규칙 |
+| `tests/eomi_plain_test.rs` | 27개 | 상수 × 받침 유무 + ㄷ/ㅂ/ㅅ/ㄹ불규칙 |
 | `tests/postfix_test.rs` | 48개 | 규칙/불규칙/ㅡ탈락/동음이의어 통합 |
 | `tests/yongeon_test.rs` | 7개 | find_yongeon, find_eogan |
 | doctest | 1개 | Yongeon::new 예시 |

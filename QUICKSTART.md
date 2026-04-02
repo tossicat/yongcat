@@ -4,11 +4,37 @@
 
 `build.rs`은 Cargo가 컴파일 전에 자동 실행하는 빌드 스크립트입니다.
 
-1. `data/yong_list.csv`를 읽는다 (`cargo:rerun-if-changed`로 CSV 변경 시 자동 재실행)
+**용언 데이터 생성:**
+1. `data/yong_list.csv`를 읽는다
 2. 각 행을 `Yongeon::new(...)` 호출로 변환한다
 3. `$OUT_DIR/yong_data.rs`에 `load_yongeons()` 함수를 생성한다
 
-사용할 때는 소스에서 `include!(concat!(env!("OUT_DIR"), "/yong_data.rs"));`로 포함한다.
+**어미 레지스트리 생성:**
+1. `src/eomi/ah_eo.rs`, `fixed.rs`, `plain.rs`를 텍스트로 읽는다
+2. `pub const XXX: Eomi` 패턴을 찾아 상수 이름을 추출한다
+3. `$OUT_DIR/eomi_data.rs`에 `load_eomis()` 함수를 생성한다
+
+소스에서 `include!`로 포함하며, CSV나 어미 소스 파일이 변경되면 자동 재실행한다.
+
+## 어미 검색
+
+### load_eomis — 전체 어미 목록
+
+```rust
+let eomis = yongcat::load_eomis();
+// 26개 어미의 (이름, &Eomi) 목록
+```
+
+### find_eomi — 문자열로 어미 검색
+
+```rust
+let eomis = yongcat::load_eomis();
+let results = yongcat::find_eomi(&eomis, "어요");
+// "어요"를 포함하는 어미를 반환 (AYO, ASS_EOYO 등)
+for (name, eomi) in &results {
+    println!("{}", name);
+}
+```
 
 ## 용언 검색
 
@@ -86,6 +112,8 @@ let result = yongcat::postfix_word(meok, &ah_eo::AYO);
 | `AYA` | 아야/어야 | 연결 (조건) | 가야, 먹어야 |
 | `ARA` | 아라/어라 | 명령 | 가라, 먹어라 |
 | `ASS` | 았/었 | 과거 시제 | 갔, 먹었 |
+| `ASS_EOYO` | 았어요/었어요 | 과거 해요체 | 갔어요, 먹었어요 |
+| `ASS_SEUMNIDA` | 았습니다/었습니다 | 과거 합쇼체 | 갔습니다, 먹었습니다 |
 
 ### fixed 어미 목록 (고정 형태)
 
@@ -96,6 +124,8 @@ let result = yongcat::postfix_word(meok, &ah_eo::AYO);
 | `NEUN` | 는 | 관형사형 (현재) | 먹는, 가는 |
 | `GE` | 게 | 결과 | 먹게, 가게 |
 | `JA` | 자 | 청유 | 먹자, 가자 |
+| `GESS_EOYO` | 겠어요 | 추측 해요체 | 먹겠어요, 가겠어요 |
+| `GESS_SEUMNIDA` | 겠습니다 | 추측 합쇼체 | 먹겠습니다, 가겠습니다 |
 
 ### plain 어미 목록 (받침 유무)
 
@@ -106,6 +136,11 @@ let result = yongcat::postfix_word(meok, &ah_eo::AYO);
 | `EUMYEON` | 으면/면 | 조건 | 먹으면, 가면 |
 | `EUNI` | 으니/니 | 이유 | 먹으니, 가니 |
 | `SEUMNIDA` | 습니다/ㅂ니다 | 종결 (합쇼체) | 먹습니다, 가ㅂ니다 |
+| `EUMYEONSEO` | 으면서/면서 | 동시 | 먹으면서, 가면서 |
+| `EURYEOGO` | 으려고/려고 | 의도 | 먹으려고, 가려고 |
+| `EUSEYO` | 으세요/세요 | 높임 명령 | 먹으세요, 가세요 |
+| `EUREO` | 으러/러 | 목적 (이동) | 먹으러, 가러 |
+| `EUSYEOSS` | 으셨/셨 | 높임 과거 | 먹으셨, 가셨 |
 
 ### 불규칙 활용 예시
 
