@@ -177,6 +177,14 @@ assert_eq!(yongcat::postfix_word(pu, &ah_eo::AYO), "퍼요");
 // 러불규칙: 이르다 → 이르러요
 let ireu = &yongcat::find_yongeon(&yongeons, "이르다")[0];
 assert_eq!(yongcat::postfix_word(ireu, &ah_eo::AYO), "이르러요");
+
+// ㅎ불규칙: 그렇다 → 그래요
+let geureot = &yongcat::find_yongeon(&yongeons, "그렇다")[0];
+assert_eq!(yongcat::postfix_word(geureot, &ah_eo::AYO), "그래요");
+
+// 르불규칙: 모르다 → 몰라요
+let moreu = &yongcat::find_yongeon(&yongeons, "모르다")[0];
+assert_eq!(yongcat::postfix_word(moreu, &ah_eo::AYO), "몰라요");
 ```
 
 ## 등급별 컴파일

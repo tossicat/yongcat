@@ -36,7 +36,9 @@ yongcat/
     │   ├── siot.rs            # ㅅ불규칙
     │   ├── rieul.rs           # ㄹ불규칙
     │   ├── u.rs               # 우불규칙
+    │   ├── hieut.rs            # ㅎ불규칙
     │   ├── reo.rs             # 러불규칙
+    │   ├── reu.rs             # 르불규칙
     │   └── eu.rs              # 으불규칙 (문서만, 규칙 활용으로 처리)
     ├── join.rs                # select → irregular → regular
     ├── merge.rs               # apply → irregular → regular
@@ -90,7 +92,9 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 | ㅅ불규칙 | 9개 | ㅅ 탈락 (AhEo/Plain) | 축약 억제 | `siot.rs` |
 | ㄹ불규칙 | 73개 | ㄴ/ㅂ/ㅅ 앞 ㄹ 탈락 (Plain/Fixed) | None | `rieul.rs` |
 | 우불규칙 | 1개 | None | ㅜ→어미 첫 모음 대체 | `u.rs` |
+| ㅎ불규칙 | 13개 | ㅎ 탈락 (AhEo/Plain) | ㅐ/ㅒ 축약 | `hieut.rs` |
 | 러불규칙 | 3개 | 어→러 변환 | 축약 억제 | `reo.rs` |
+| 르불규칙 | 36개 | ㄹ 삽입 + 초성 교체 (AhEo) | 축약 억제 | `reu.rs` |
 | 으불규칙 | 24개 | (규칙 활용으로 처리) | (규칙 활용으로 처리) | `eu.rs` (문서만) |
 
 ### 기타
@@ -104,7 +108,7 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 
 ## 테스트 현황
 
-총 209개 테스트 통과
+총 254개 테스트 통과
 
 | 위치 | 테스트 수 | 내용 |
 |------|-----------|------|
@@ -116,27 +120,20 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 | `irregular/dieut.rs` | 5개 | join × AhEo/Past/Plain모음/Plain자음/Fixed |
 | `irregular/bieut.rs` | 10개 | join/merge × 양성/음성/다음절/과거/Plain모음/Plain자음 |
 | `irregular/siot.rs` | 9개 | join/merge × 축약 억제/Plain모음/Plain자음 |
+| `irregular/hieut.rs` | 11개 | join/merge × 양성/음성/과거/Plain모음/Plain자음/Fixed |
 | `irregular/rieul.rs` | 9개 | join × AhEo/Plain5종/Fixed2종/다음절 |
+| `irregular/reu.rs` | 11개 | join/merge × 양성/음성/과거/다음절/형용사/Plain/Fixed |
 | `irregular/u.rs` | 3개 | merge × AhEo/Past/Plain |
 | `irregular/reo.rs` | 5개 | join/merge × AhEo/Past/Plain |
-| `tests/eomi_ah_eo_test.rs` | 16개 | 규칙 8 + 불규칙 8 |
+| `tests/eomi_ah_eo_test.rs` | 20개 | 규칙 8 + 불규칙 12 |
 | `tests/eomi_find_test.rs` | 7개 | load_eomis 개수, find_eomi 검색 |
 | `tests/eomi_fixed_test.rs` | 15개 | 상수 × 받침 유무 + ㄹ불규칙 |
-| `tests/eomi_plain_test.rs` | 27개 | 상수 × 받침 유무 + ㄷ/ㅂ/ㅅ/ㄹ불규칙 |
-| `tests/postfix_test.rs` | 48개 | 규칙/불규칙/ㅡ탈락/동음이의어 통합 |
+| `tests/eomi_plain_test.rs` | 30개 | 상수 × 받침 유무 + ㄷ/ㅂ/ㅅ/ㄹ/ㅎ불규칙 |
+| `tests/postfix_test.rs` | 64개 | 규칙/불규칙/ㅡ탈락/동음이의어 통합 |
 | `tests/yongeon_test.rs` | 7개 | find_yongeon, find_eogan |
 | doctest | 1개 | Yongeon::new 예시 |
 
 ## 미구현 사항
-
-### 불규칙 활용 (2종)
-
-| 유형 | 용언 수 | 난이도 |
-|------|---------|--------|
-| ㅎ불규칙 | 13개 | 높음 — 특수 축약 |
-| 르불규칙 | 36개 | 높음 — ㄹ 삽입 + 어간 변환 |
-
-### 기타
 
 - 품사별 어미 제한 없음 (동사 전용 어미를 형용사에 적용해도 오류 없이 생성)
 - 등급 필터 테스트 부재
