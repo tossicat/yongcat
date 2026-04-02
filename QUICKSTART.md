@@ -70,12 +70,12 @@ let eomi = find_eomi_exact("었").unwrap();
 conjugate(verb, eomi)  // → "먹었"
 ```
 
-템플릿 시스템에 활용할 수 있습니다. 예를 들어 `"{쉬다:세요}"`라는 템플릿을 파싱하여 용언과 어미를 분리한 뒤, `lookup()` + `find_eomi_exact()` + `conjugate()`로 활용형을 생성하면 됩니다.
+템플릿 시스템에 활용할 수 있습니다. 예를 들어 `"{쉬다,세요}"`라는 템플릿을 파싱하여 용언과 어미를 분리한 뒤, `lookup()` + `find_eomi_exact()` + `conjugate()`로 활용형을 생성하면 됩니다.
 
 ```rust
 use yongcat::*;
 
-// 템플릿 파서가 "{쉬다:세요}"를 분리했다고 가정
+// 템플릿 파서가 "{쉬다,세요}"를 분리했다고 가정
 let word = "쉬다";
 let ending = "세요";
 
