@@ -66,9 +66,9 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 
 | 유형 | 파일 | 상수 |
 |------|------|------|
-| AhEo (아/어 계열) | `ah_eo.rs` | A, AYO, ASEO, ADO, AYA, ARA, ASS, ASS_EOYO, ASS_SEUMNIDA (9개) |
-| Fixed (고정 형태) | `fixed.rs` | GO, JI, NEUN, GE, JA, GESS_EOYO, GESS_SEUMNIDA (7개) |
-| Plain (받침 유무) | `plain.rs` | EUN, EUL, EUMYEON, EUNI, SEUMNIDA, EUMYEONSEO, EURYEOGO, EUSEYO, EUREO, EUSYEOSS (10개) |
+| AhEo (아/어 계열) | `ah_eo.rs` | A, AYO, ASEO, ADO, AYA, ARA, ASS, ASS_EOYO, ASS_SEUMNIDA, AJIDA, ABODA, ADALLA (12개) |
+| Fixed (고정 형태) | `fixed.rs` | GO, JI, NEUN, GE, JA, GESS_EOYO, GESS_SEUMNIDA, DA, JIMAN, GEONA, NEUNDE, DAGA, DOROK, DAMYEON (14개) |
+| Plain (받침 유무) | `plain.rs` | EUN, EUL, EUMYEON, EUNI, SEUMNIDA, EUMYEONSEO, EURYEOGO, EUSEYO, EUREO, EUSYEOSS, EUNIKKA, EULKKA, EULGE, EULLAE, EULSSUROK, EUPSIDA (16개) |
 
 `AhEoForm`은 2-튜플 `(양성, 음성)`입니다. 여불규칙의 여 형태는 음성 형태에서 ㅓ→ㅕ 변환으로 생성합니다.
 

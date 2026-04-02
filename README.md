@@ -16,7 +16,7 @@
 let yongeons = yongcat::load_yongeons();
 let eomis = yongcat::load_eomis();
 println!("용언: {}개", yongeons.len());  // 1721
-println!("어미: {}개", eomis.len());     // 26
+println!("어미: {}개", eomis.len());     // 42
 ```
 
 ## 사용법
@@ -39,11 +39,11 @@ let result = yongcat::postfix_word(meok, &ah_eo::ASS);
 // "먹었"
 ```
 
-## 어미 (26개)
+## 어미 (42개)
 
 `load_eomis()`로 전체 어미 목록을 로드하고, `find_eomi()`로 문자열 검색할 수 있습니다.
 
-### ah_eo (아/어 계열, 9개)
+### ah_eo (아/어 계열, 12개)
 
 | 상수 | 어미 | 용도 |
 |------|------|------|
@@ -56,8 +56,11 @@ let result = yongcat::postfix_word(meok, &ah_eo::ASS);
 | `ASS` | 았/었 | 과거 시제 |
 | `ASS_EOYO` | 았어요/었어요 | 과거 해요체 |
 | `ASS_SEUMNIDA` | 았습니다/었습니다 | 과거 합쇼체 |
+| `AJIDA` | 아지다/어지다 | 피동·상태변화 |
+| `ABODA` | 아보다/어보다 | 시행 |
+| `ADALLA` | 아달라/어달라 | 요청 |
 
-### fixed (고정 형태, 7개)
+### fixed (고정 형태, 14개)
 
 | 상수 | 어미 | 용도 |
 |------|------|------|
@@ -68,8 +71,15 @@ let result = yongcat::postfix_word(meok, &ah_eo::ASS);
 | `JA` | 자 | 청유 |
 | `GESS_EOYO` | 겠어요 | 추측 해요체 |
 | `GESS_SEUMNIDA` | 겠습니다 | 추측 합쇼체 |
+| `DA` | 다 | 종결 (평서) |
+| `JIMAN` | 지만 | 연결 (대조) |
+| `GEONA` | 거나 | 연결 (선택) |
+| `NEUNDE` | 는데 | 연결 (배경·대조) |
+| `DAGA` | 다가 | 연결 (전환) |
+| `DOROK` | 도록 | 연결 (목적·정도) |
+| `DAMYEON` | 다면 | 연결 (가정) |
 
-### plain (받침 유무, 10개)
+### plain (받침 유무, 16개)
 
 | 상수 | 어미 | 용도 |
 |------|------|------|
@@ -83,6 +93,12 @@ let result = yongcat::postfix_word(meok, &ah_eo::ASS);
 | `EUSEYO` | 으세요/세요 | 높임 명령 |
 | `EUREO` | 으러/러 | 목적 (이동) |
 | `EUSYEOSS` | 으셨/셨 | 높임 과거 |
+| `EUNIKKA` | 으니까/니까 | 이유 (강조) |
+| `EULKKA` | 을까/ㄹ까 | 종결 (의문·제안) |
+| `EULGE` | 을게/ㄹ게 | 종결 (약속·의지) |
+| `EULLAE` | 을래/ㄹ래 | 종결 (의향, 반말) |
+| `EULSSUROK` | 을수록/ㄹ수록 | 연결 (점진) |
+| `EUPSIDA` | 읍시다/ㅂ시다 | 종결 (격식 청유) |
 
 ## 활용 규칙
 

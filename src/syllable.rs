@@ -63,7 +63,7 @@ impl Syllable {
 /// 완성형 한글 범위(가~힣)인지 확인합니다.
 fn is_hangul(c: char) -> bool {
     let code = c as u32;
-    code >= HANGUL_BASE && code < HANGUL_BASE + ONSET_COUNT * VOWEL_COUNT * CODA_COUNT
+    (HANGUL_BASE..HANGUL_BASE + ONSET_COUNT * VOWEL_COUNT * CODA_COUNT).contains(&code)
 }
 
 /// 한글 한 글자를 초성, 중성, 종성으로 분리합니다.
@@ -121,18 +121,18 @@ pub fn combine_jamo(s: &str) -> String {
     let mut prev_char: Option<char> = None;
 
     for c in s.chars() {
-        if let Some(prev) = prev_char {
-            if let Some(mut syl) = split(prev) {
-                if syl.coda.is_none() && is_valid_coda(c) {
-                    let prev_len = prev.len_utf8();
-                    result.truncate(result.len() - prev_len);
-                    syl.coda = Some(c);
-                    let combined = join(&syl);
-                    result.push(combined);
-                    prev_char = Some(combined);
-                    continue;
-                }
-            }
+        if let Some(prev) = prev_char
+            && let Some(mut syl) = split(prev)
+            && syl.coda.is_none()
+            && is_valid_coda(c)
+        {
+            let prev_len = prev.len_utf8();
+            result.truncate(result.len() - prev_len);
+            syl.coda = Some(c);
+            let combined = join(&syl);
+            result.push(combined);
+            prev_char = Some(combined);
+            continue;
         }
         result.push(c);
         prev_char = Some(c);
@@ -142,7 +142,7 @@ pub fn combine_jamo(s: &str) -> String {
 
 /// 독립 자모 자음이 종성으로 쓸 수 있는지 확인합니다.
 fn is_valid_coda(c: char) -> bool {
-    CODAS.iter().any(|&x| x == Some(c))
+    CODAS.contains(&Some(c))
 }
 
 #[cfg(test)]

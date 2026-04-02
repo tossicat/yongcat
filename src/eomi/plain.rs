@@ -34,3 +34,21 @@ pub const EUREO: Eomi = Eomi::Plain("으러", "러");
 
 /// 으셨/셨 — 높임 과거: 먹 + 으셨 → 먹으셨, 가 + 셨 → 가셨
 pub const EUSYEOSS: Eomi = Eomi::Plain("으셨", "셨");
+
+/// 으니까/니까 — 이유 (강조): 먹 + 으니까 → 먹으니까, 가 + 니까 → 가니까
+pub const EUNIKKA: Eomi = Eomi::Plain("으니까", "니까");
+
+/// 을까/ㄹ까 — 종결 (의문·제안): 먹 + 을까 → 먹을까, 가 + ㄹ까 → 갈까
+pub const EULKKA: Eomi = Eomi::Plain("을까", "ㄹ까");
+
+/// 을게/ㄹ게 — 종결 (약속·의지): 먹 + 을게 → 먹을게, 가 + ㄹ게 → 갈게
+pub const EULGE: Eomi = Eomi::Plain("을게", "ㄹ게");
+
+/// 을래/ㄹ래 — 종결 (의향, 반말): 먹 + 을래 → 먹을래, 가 + ㄹ래 → 갈래
+pub const EULLAE: Eomi = Eomi::Plain("을래", "ㄹ래");
+
+/// 을수록/ㄹ수록 — 연결 (점진): 먹 + 을수록 → 먹을수록, 가 + ㄹ수록 → 갈수록
+pub const EULSSUROK: Eomi = Eomi::Plain("을수록", "ㄹ수록");
+
+/// 읍시다/ㅂ시다 — 종결 (격식 청유): 먹 + 읍시다 → 먹읍시다, 가 + ㅂ시다 → 갑시다
+pub const EUPSIDA: Eomi = Eomi::Plain("읍시다", "ㅂ시다");

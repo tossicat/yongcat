@@ -34,3 +34,12 @@ pub const ASS_EOYO: Eomi = Eomi::AhEo(("았어요", "었어요"));
 
 /// 았습니다/었습니다 — 과거 합쇼체: 가 + 았습니다 → 갔습니다, 먹 + 었습니다 → 먹었습니다
 pub const ASS_SEUMNIDA: Eomi = Eomi::AhEo(("았습니다", "었습니다"));
+
+/// 아지다/어지다 — 피동·상태변화: 좋 + 아지다 → 좋아지다, 커 + 어지다 → 커지다
+pub const AJIDA: Eomi = Eomi::AhEo(("아지다", "어지다"));
+
+/// 아보다/어보다 — 시행: 가 + 아보다 → 가보다, 먹 + 어보다 → 먹어보다
+pub const ABODA: Eomi = Eomi::AhEo(("아보다", "어보다"));
+
+/// 아달라/어달라 — 요청: 읽 + 어달라 → 읽어달라, 가 + 아달라 → 가달라
+pub const ADALLA: Eomi = Eomi::AhEo(("아달라", "어달라"));

@@ -8,7 +8,7 @@ use yongcat::{find_eomi, load_eomis};
 #[test]
 fn test_load_eomis_count() {
     let eomis = load_eomis();
-    assert_eq!(eomis.len(), 26);
+    assert_eq!(eomis.len(), 42);
 }
 
 #[test]
