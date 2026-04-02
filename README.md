@@ -121,7 +121,7 @@ let result = yongcat::postfix_word(meok, &ah_eo::ASS);
 | `irregular` | 불규칙 활용 유형별 처리 (여/ㄷ/ㅂ/ㅅ/ㅎ/ㄹ/르/우/러/으) |
 | `join` | 어간-어미 접합 디스패처 (irregular → regular) |
 | `merge` | 음운 축약/탈락 디스패처 (irregular → regular) |
-| `syllable` | 한글 음절 분해/합성 |
+| `syllable` | 한글 음절 분해/합성, 자모 합성 |
 | `yongeon` | `Yongeon` 구조체, `moeum_joha()` 모음조화 |
 | `types` | `YongeonType`, `IrregularType` 열거형 |
 

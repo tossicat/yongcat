@@ -15,11 +15,11 @@ yongcat/
 ├── data/
 │   └── yong_list.csv          # 용언 1,721개
 ├── tests/
-│   ├── eomi_ah_eo_test.rs     # 아/어 계열 어미 테스트 (16개)
+│   ├── eomi_ah_eo_test.rs     # 아/어 계열 어미 테스트 (20개)
 │   ├── eomi_find_test.rs      # 어미 검색 테스트 (7개)
 │   ├── eomi_fixed_test.rs     # 고정 형태 어미 테스트 (15개)
-│   ├── eomi_plain_test.rs     # 받침 유무 어미 테스트 (27개)
-│   ├── postfix_test.rs        # 활용 파이프라인 통합 테스트 (48개)
+│   ├── eomi_plain_test.rs     # 받침 유무 어미 테스트 (30개)
+│   ├── postfix_test.rs        # 활용 파이프라인 통합 테스트 (64개)
 │   └── yongeon_test.rs        # 용언 검색 통합 테스트 (7개)
 └── src/
     ├── lib.rs                 # 크레이트 루트, find_yongeon, find_eogan, find_eomi, postfix, postfix_word
@@ -81,6 +81,7 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 | 모음 축약 6종 | merge | `merge.rs` contract_ah_eo() |
 | ㅡ 탈락 | merge | `merge.rs` contract_ah_eo() |
 | 종성 이전 | merge | `merge.rs` contract_ah_eo() |
+| 자모 합성 | postfix_word | `syllable.rs` combine_jamo() |
 
 ### 불규칙 활용
 
@@ -100,7 +101,7 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 ### 기타
 
 - `build.rs`: CSV → `load_yongeons()`, 소스 파싱 → `load_eomis()` 코드 생성, 등급 필터링
-- `syllable.rs`: 한글 유니코드 분해/합성, `starts_with_vowel()`, 외부 의존성 없음
+- `syllable.rs`: 한글 유니코드 분해/합성, `starts_with_vowel()`, `combine_jamo()`, 외부 의존성 없음
 - `Yongeon::new()`: 빈 어간 assert 포함
 - `Yongeon::moeum_joha()`: 모음조화 판별 통일 메서드
 - `Eomi::matches()`: 문자열 매칭 메서드
@@ -108,11 +109,11 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 
 ## 테스트 현황
 
-총 254개 테스트 통과
+총 258개 테스트 통과
 
 | 위치 | 테스트 수 | 내용 |
 |------|-----------|------|
-| `syllable.rs` | 9개 | 분해/합성, 라운드트립, 비한글, 받침/양성모음 |
+| `syllable.rs` | 13개 | 분해/합성, 라운드트립, 비한글, 받침/양성모음, 자모 합성 |
 | `yongeon.rs` | 12개 | 생성, 어간 분석, 품사/활용 판별, Display |
 | `join.rs` | 6개 | AhEo 모음조화, Plain 받침 유무, Fixed |
 | `merge.rs` | 13개 | 모음 축약 6종, 과거 시제 종성 이전, 받침 통과 |
@@ -137,4 +138,3 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 
 - 품사별 어미 제한 없음 (동사 전용 어미를 형용사에 적용해도 오류 없이 생성)
 - 등급 필터 테스트 부재
-- Plain 어미에서 자모 결합 미처리 (가+ㄴ → "가ㄴ", "간"이 아님)
