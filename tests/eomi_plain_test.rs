@@ -60,12 +60,12 @@ fn test_seumnida_with_coda() {
 
 #[test]
 fn test_eun_without_coda() {
-    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUN), "가ㄴ");
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUN), "간");
 }
 
 #[test]
 fn test_eul_without_coda() {
-    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUL), "가ㄹ");
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUL), "갈");
 }
 
 #[test]
@@ -80,7 +80,7 @@ fn test_euni_without_coda() {
 
 #[test]
 fn test_seumnida_without_coda() {
-    assert_eq!(postfix_word(&verb("가다", "가"), &plain::SEUMNIDA), "가ㅂ니다");
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::SEUMNIDA), "갑니다");
 }
 
 // --- 으면서/면서 ---
@@ -183,8 +183,8 @@ fn test_rieul_eumyeon() {
 
 #[test]
 fn test_rieul_seumnida() {
-    // 살다 + 습니다/ㅂ니다 → 사ㅂ니다 (ㄹ탈락 before ㅂ)
-    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &plain::SEUMNIDA), "사ㅂ니다");
+    // 살다 + 습니다/ㅂ니다 → 삽니다 (ㄹ탈락 before ㅂ, 자모 합성)
+    assert_eq!(postfix_word(&rieul_verb("살다", "살"), &plain::SEUMNIDA), "삽니다");
 }
 
 #[test]
@@ -203,8 +203,8 @@ fn test_hieut_eumyeon() {
 
 #[test]
 fn test_hieut_eun() {
-    // 그렇다 + 은/ㄴ → 그러ㄴ (ㅎ 탈락, 무받침형)
-    assert_eq!(postfix_word(&hieut_adj("그렇다", "그렇"), &plain::EUN), "그러ㄴ");
+    // 그렇다 + 은/ㄴ → 그런 (ㅎ 탈락, 무받침형, 자모 합성)
+    assert_eq!(postfix_word(&hieut_adj("그렇다", "그렇"), &plain::EUN), "그런");
 }
 
 #[test]

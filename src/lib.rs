@@ -71,5 +71,6 @@ pub fn postfix<'a>(
 /// `join` 모듈로 어미를 선택·접합한 뒤, `merge` 모듈로 음운 축약을 적용합니다.
 pub fn postfix_word(yongeon: &Yongeon, eomi: &Eomi) -> String {
     let joined = join::select(yongeon, eomi);
-    merge::apply(yongeon, &joined, eomi)
+    let merged = merge::apply(yongeon, &joined, eomi);
+    syllable::combine_jamo(&merged)
 }

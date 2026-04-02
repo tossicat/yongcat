@@ -110,6 +110,41 @@ pub fn compose(syllables: &[Syllable]) -> String {
     syllables.iter().map(join).collect()
 }
 
+/// 독립 자모 자음을 앞 음절의 종성으로 합성합니다.
+///
+/// 앞 글자가 종성 없는 완성형 한글이고, 현재 글자가 종성으로 쓸 수 있는
+/// 독립 자모 자음이면 합성합니다. 그 외에는 그대로 통과합니다.
+///
+/// 예: "가ㄴ" → "간", "가ㅂ니다" → "갑니다", "먹은" → "먹은"
+pub fn combine_jamo(s: &str) -> String {
+    let mut result = String::with_capacity(s.len());
+    let mut prev_char: Option<char> = None;
+
+    for c in s.chars() {
+        if let Some(prev) = prev_char {
+            if let Some(mut syl) = split(prev) {
+                if syl.coda.is_none() && is_valid_coda(c) {
+                    let prev_len = prev.len_utf8();
+                    result.truncate(result.len() - prev_len);
+                    syl.coda = Some(c);
+                    let combined = join(&syl);
+                    result.push(combined);
+                    prev_char = Some(combined);
+                    continue;
+                }
+            }
+        }
+        result.push(c);
+        prev_char = Some(c);
+    }
+    result
+}
+
+/// 독립 자모 자음이 종성으로 쓸 수 있는지 확인합니다.
+fn is_valid_coda(c: char) -> bool {
+    CODAS.iter().any(|&x| x == Some(c))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -169,6 +204,32 @@ mod tests {
     fn test_has_coda() {
         assert!(split('먹').unwrap().has_coda());
         assert!(!split('가').unwrap().has_coda());
+    }
+
+    #[test]
+    fn test_combine_jamo_basic() {
+        assert_eq!(combine_jamo("가ㄴ"), "간");
+        assert_eq!(combine_jamo("가ㄹ"), "갈");
+        assert_eq!(combine_jamo("가ㅂ니다"), "갑니다");
+    }
+
+    #[test]
+    fn test_combine_jamo_with_existing_coda() {
+        // 앞 음절에 이미 종성이 있으면 합성하지 않음
+        assert_eq!(combine_jamo("먹ㄴ"), "먹ㄴ");
+    }
+
+    #[test]
+    fn test_combine_jamo_no_jamo() {
+        // 독립 자모가 없으면 변환 없음
+        assert_eq!(combine_jamo("먹은"), "먹은");
+        assert_eq!(combine_jamo("가면"), "가면");
+    }
+
+    #[test]
+    fn test_combine_jamo_multi_syllable() {
+        assert_eq!(combine_jamo("그러ㄴ"), "그런");
+        assert_eq!(combine_jamo("사ㅂ니다"), "삽니다");
     }
 
     #[test]
