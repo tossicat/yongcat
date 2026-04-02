@@ -119,7 +119,7 @@ let eomis = yongcat::load_eomis();
 ```rust
 let eomis = yongcat::load_eomis();
 let results = yongcat::find_eomi(&eomis, "어요");
-// "어요"를 포함하는 어미를 반환 (AYO, ASS_EOYO 등)
+// "어요"와 정확히 일치하는 어미를 반환 (AYO)
 for (name, eomi) in &results {
     println!("{}", name);
 }
@@ -250,46 +250,17 @@ let result = yongcat::postfix_word(meok, &ah_eo::AYO);
 ### 불규칙 활용 예시
 
 ```rust
-use yongcat::eomi::ah_eo;
+use yongcat::*;
 
-let yongeons = yongcat::load_yongeons();
-
-// 여불규칙: 하다 → 해요
-let ha = &yongcat::find_yongeon(&yongeons, "하다")[0];
-assert_eq!(yongcat::postfix_word(ha, &ah_eo::AYO), "해요");
-
-// ㄷ불규칙: 걷다 → 걸어요
-let geot = &yongcat::find_yongeon(&yongeons, "걷다")[0];
-assert_eq!(yongcat::postfix_word(geot, &ah_eo::AYO), "걸어요");
-
-// ㅂ불규칙: 돕다 → 도와요
-let dop = &yongcat::find_yongeon(&yongeons, "돕다")[0];
-assert_eq!(yongcat::postfix_word(dop, &ah_eo::AYO), "도와요");
-
-// ㅅ불규칙: 짓다 → 지어요 (축약 억제)
-let jit = &yongcat::find_yongeon(&yongeons, "짓다")[0];
-assert_eq!(yongcat::postfix_word(jit, &ah_eo::AYO), "지어요");
-
-// ㄹ불규칙: 살다 + 는 → 사는 (ㄹ 탈락)
-use yongcat::eomi::fixed;
-let sal = &yongcat::find_yongeon(&yongeons, "살다")[0];
-assert_eq!(yongcat::postfix_word(sal, &fixed::NEUN), "사는");
-
-// 우불규칙: 푸다 → 퍼요
-let pu = &yongcat::find_yongeon(&yongeons, "푸다")[0];
-assert_eq!(yongcat::postfix_word(pu, &ah_eo::AYO), "퍼요");
-
-// 러불규칙: 이르다 → 이르러요
-let ireu = &yongcat::find_yongeon(&yongeons, "이르다")[0];
-assert_eq!(yongcat::postfix_word(ireu, &ah_eo::AYO), "이르러요");
-
-// ㅎ불규칙: 그렇다 → 그래요
-let geureot = &yongcat::find_yongeon(&yongeons, "그렇다")[0];
-assert_eq!(yongcat::postfix_word(geureot, &ah_eo::AYO), "그래요");
-
-// 르불규칙: 모르다 → 몰라요
-let moreu = &yongcat::find_yongeon(&yongeons, "모르다")[0];
-assert_eq!(yongcat::postfix_word(moreu, &ah_eo::AYO), "몰라요");
+conjugate(lookup("하다"), &AYO);       // 여불규칙: "해요"
+conjugate(lookup("걷다"), &AYO);       // ㄷ불규칙: "걸어요"
+conjugate(lookup("돕다"), &AYO);       // ㅂ불규칙: "도와요"
+conjugate(lookup("짓다"), &AYO);       // ㅅ불규칙: "지어요"
+conjugate(lookup("살다"), &NEUN);      // ㄹ불규칙: "사는"
+conjugate(lookup("푸다"), &AYO);       // 우불규칙: "퍼요"
+conjugate(lookup("이르다"), &AYO);     // 러불규칙: "이르러요"
+conjugate(lookup("그렇다"), &AYO);     // ㅎ불규칙: "그래요"
+conjugate(lookup("모르다"), &AYO);     // 르불규칙: "몰라요"
 ```
 
 ## 등급별 컴파일
