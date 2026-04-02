@@ -22,12 +22,12 @@ yongcat/
 │   ├── postfix_test.rs        # 활용 파이프라인 통합 테스트 (64개)
 │   └── yongeon_test.rs        # 용언 검색 통합 테스트 (7개)
 └── src/
-    ├── lib.rs                 # 크레이트 루트, find_yongeon, find_eogan, find_eomi, postfix, postfix_word
+    ├── lib.rs                 # 크레이트 루트, lookup, conjugate, find_eomi_exact, postfix, postfix_word
     ├── eomi/
     │   ├── mod.rs             # Eomi 열거형, AhEoForm 타입 (2-튜플), Eomi::matches()
-    │   ├── ah_eo.rs           # 아/어 계열 어미 상수 9개
-    │   ├── fixed.rs           # 고정 형태 어미 상수 7개
-    │   └── plain.rs           # 받침 유무 어미 상수 10개
+    │   ├── ah_eo.rs           # 아/어 계열 어미 상수 12개
+    │   ├── fixed.rs           # 고정 형태 어미 상수 14개
+    │   └── plain.rs           # 받침 유무 어미 상수 16개
     ├── irregular/
     │   ├── mod.rs             # 불규칙 유형별 디스패치
     │   ├── yeo.rs             # 여불규칙
@@ -42,7 +42,7 @@ yongcat/
     │   └── eu.rs              # 으불규칙 (문서만, 규칙 활용으로 처리)
     ├── join.rs                # select → irregular → regular
     ├── merge.rs               # apply → irregular → regular
-    ├── syllable.rs            # 한글 음절 분해/합성, starts_with_vowel()
+    ├── syllable.rs            # 한글 음절 분해/합성, starts_with_vowel(), combine_jamo()
     ├── types.rs               # YongeonType, IrregularType 열거형
     └── yongeon.rs             # Yongeon 구조체, moeum_joha()
 
@@ -106,10 +106,12 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 - `Yongeon::moeum_joha()`: 모음조화 판별 통일 메서드
 - `Eomi::matches()`: 문자열 매칭 메서드
 - `find_eomi()`: 어미 문자열 검색
+- `lookup()` / `conjugate()` / `find_eomi_exact()`: 편의 API (전역 데이터 사용)
+- 어미 상수 플랫 re-export: `use yongcat::*;`로 `AYO`, `GO`, `EUN` 등 직접 접근
 
 ## 테스트 현황
 
-총 258개 테스트 통과
+총 263개 테스트 통과
 
 | 위치 | 테스트 수 | 내용 |
 |------|-----------|------|
@@ -127,7 +129,7 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 | `irregular/u.rs` | 3개 | merge × AhEo/Past/Plain |
 | `irregular/reo.rs` | 5개 | join/merge × AhEo/Past/Plain |
 | `tests/eomi_ah_eo_test.rs` | 20개 | 규칙 8 + 불규칙 12 |
-| `tests/eomi_find_test.rs` | 7개 | load_eomis 개수, find_eomi 검색 |
+| `tests/eomi_find_test.rs` | 12개 | load_eomis 개수, find_eomi 검색, find_eomi_exact |
 | `tests/eomi_fixed_test.rs` | 15개 | 상수 × 받침 유무 + ㄹ불규칙 |
 | `tests/eomi_plain_test.rs` | 30개 | 상수 × 받침 유무 + ㄷ/ㅂ/ㅅ/ㄹ/ㅎ불규칙 |
 | `tests/postfix_test.rs` | 64개 | 규칙/불규칙/ㅡ탈락/동음이의어 통합 |
