@@ -28,3 +28,9 @@ pub const ARA: Eomi = Eomi::AhEo(("아라", "어라"));
 /// "았"의 로마자 음차(ASS)가 영어 비속어와 동일하지만,
 /// 한국어 음차 규칙을 일관되게 적용한 것입니다.
 pub const ASS: Eomi = Eomi::AhEo(("았", "었"));
+
+/// 았어요/었어요 — 과거 해요체: 가 + 았어요 → 갔어요, 먹 + 었어요 → 먹었어요
+pub const ASS_EOYO: Eomi = Eomi::AhEo(("았어요", "었어요"));
+
+/// 았습니다/었습니다 — 과거 합쇼체: 가 + 았습니다 → 갔습니다, 먹 + 었습니다 → 먹었습니다
+pub const ASS_SEUMNIDA: Eomi = Eomi::AhEo(("았습니다", "었습니다"));

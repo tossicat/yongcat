@@ -17,3 +17,9 @@ pub const GE: Eomi = Eomi::Fixed("게");
 
 /// 자 — 청유: 먹 + 자 → 먹자, 가 + 자 → 가자
 pub const JA: Eomi = Eomi::Fixed("자");
+
+/// 겠어요 — 추측/의지 해요체: 먹 + 겠어요 → 먹겠어요, 가 + 겠어요 → 가겠어요
+pub const GESS_EOYO: Eomi = Eomi::Fixed("겠어요");
+
+/// 겠습니다 — 추측/의지 합쇼체: 먹 + 겠습니다 → 먹겠습니다, 가 + 겠습니다 → 가겠습니다
+pub const GESS_SEUMNIDA: Eomi = Eomi::Fixed("겠습니다");

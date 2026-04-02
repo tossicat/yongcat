@@ -31,3 +31,6 @@ pub const EUSEYO: Eomi = Eomi::Plain("으세요", "세요");
 
 /// 으러/러 — 목적 (이동): 먹 + 으러 → 먹으러, 가 + 러 → 가러
 pub const EUREO: Eomi = Eomi::Plain("으러", "러");
+
+/// 으셨/셨 — 높임 과거: 먹 + 으셨 → 먹으셨, 가 + 셨 → 가셨
+pub const EUSYEOSS: Eomi = Eomi::Plain("으셨", "셨");
