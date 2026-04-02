@@ -1,5 +1,94 @@
 # 시작 가이드
 
+## 빠른 시작
+
+`use yongcat::*;`로 모든 어미 상수와 편의 함수를 가져올 수 있습니다.
+
+```rust
+use yongcat::*;
+
+// 용언 검색
+let verb = lookup("먹다");
+
+// 활용형 생성
+conjugate(verb, &AYO);           // "먹어요"
+conjugate(verb, &ASS);           // "먹었"
+conjugate(verb, &EUMYEON);       // "먹으면"
+conjugate(verb, &GO);            // "먹고"
+```
+
+### 게임 전투 로그 예시
+
+```rust
+use yongcat::*;
+
+let ha = lookup("하다");
+
+// 동적으로 스킬 이름을 조합
+let skill = "공격";
+println!("철수가 몬스터를 {}{}.", skill, conjugate(ha, &ASS_SEUMNIDA));
+// → "철수가 몬스터를 공격했습니다."
+
+println!("철수가 몬스터를 {}{}!", skill, conjugate(ha, &A));
+// → "철수가 몬스터를 공격해!"
+
+// 통째로 활용할 수도 있음
+let verb = lookup("공격하다");
+println!("철수가 몬스터를 {}.", conjugate(verb, &ASS_SEUMNIDA));
+// → "철수가 몬스터를 공격했습니다."
+
+// 비-하다 용언은 통째로 활용
+let verb = lookup("때리다");
+println!("철수가 몬스터를 {}.", conjugate(verb, &ASS));
+// → "철수가 몬스터를 때렸."
+
+// 다양한 어미로 상황 묘사
+let verb = lookup("쓰러지다");
+println!("몬스터가 {}.", conjugate(verb, &ASS_SEUMNIDA));
+// → "몬스터가 쓰러졌습니다."
+
+let verb = lookup("얻다");
+println!("경험치를 {}!", conjugate(verb, &ASS_EOYO));
+// → "경험치를 얻었어요!"
+```
+
+## 어미 문자열 검색
+
+`find_eomi_exact()`로 어미 형태 문자열을 넘기면 해당 어미를 찾아줍니다. `lookup()`, `conjugate()`와 조합하면 문자열만으로 활용형을 생성할 수 있습니다.
+
+```rust
+use yongcat::*;
+
+// "세요" → EUSEYO(으세요/세요) 를 찾아서 활용
+let verb = lookup("쉬다");
+let eomi = find_eomi_exact("세요").unwrap();
+conjugate(verb, eomi)  // → "쉬세요"
+
+// "었" → ASS(았/었) 를 찾아서 활용
+let verb = lookup("먹다");
+let eomi = find_eomi_exact("었").unwrap();
+conjugate(verb, eomi)  // → "먹었"
+```
+
+템플릿 시스템에 활용할 수 있습니다. 예를 들어 `"{쉬다:세요}"`라는 템플릿을 파싱하여 용언과 어미를 분리한 뒤, `lookup()` + `find_eomi_exact()` + `conjugate()`로 활용형을 생성하면 됩니다.
+
+```rust
+use yongcat::*;
+
+// 템플릿 파서가 "{쉬다:세요}"를 분리했다고 가정
+let word = "쉬다";
+let ending = "세요";
+
+let verb = lookup(word);
+let eomi = find_eomi_exact(ending).unwrap();
+let result = conjugate(verb, eomi);
+// → "쉬세요"
+
+// 게임 대화 시스템 예시
+let npc_line = format!("여기서 {}.", result);
+// → "여기서 쉬세요."
+```
+
 ## build.rs
 
 `build.rs`은 Cargo가 컴파일 전에 자동 실행하는 빌드 스크립트입니다.

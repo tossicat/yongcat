@@ -18,8 +18,19 @@ pub mod types;
 pub mod yongeon;
 
 pub use eomi::Eomi;
+pub use eomi::ah_eo::*;
+pub use eomi::fixed::*;
+pub use eomi::plain::*;
 pub use types::{IrregularType, YongeonType};
 pub use yongeon::Yongeon;
+
+use std::sync::LazyLock;
+
+/// 전역 용언 데이터입니다. 최초 접근 시 한 번만 로드됩니다.
+static YONGEONS: LazyLock<Vec<Yongeon<'static>>> = LazyLock::new(load_yongeons);
+
+/// 전역 어미 데이터입니다. 최초 접근 시 한 번만 로드됩니다.
+static EOMIS: LazyLock<Vec<(&'static str, &'static Eomi)>> = LazyLock::new(load_eomis);
 
 include!(concat!(env!("OUT_DIR"), "/yong_data.rs"));
 include!(concat!(env!("OUT_DIR"), "/eomi_data.rs"));
@@ -73,4 +84,37 @@ pub fn postfix_word(yongeon: &Yongeon, eomi: &Eomi) -> String {
     let joined = join::select(yongeon, eomi);
     let merged = merge::apply(yongeon, &joined, eomi);
     syllable::combine_jamo(&merged)
+}
+
+/// 기본형으로 용언을 검색합니다. 첫 번째 일치하는 용언을 반환합니다.
+///
+/// 동음이의어를 모두 얻으려면 `lookup_all()`을 사용합니다.
+///
+/// # Panics
+/// 일치하는 용언이 없으면 패닉합니다.
+pub fn lookup(word: &str) -> &'static Yongeon<'static> {
+    lookup_all(word)
+        .into_iter()
+        .next()
+        .unwrap_or_else(|| panic!("용언을 찾을 수 없습니다: \"{}\"", word))
+}
+
+/// 기본형으로 용언을 검색합니다. 동음이의어를 포함한 모든 일치 결과를 반환합니다.
+pub fn lookup_all(word: &str) -> Vec<&'static Yongeon<'static>> {
+    find_yongeon(&YONGEONS, word)
+}
+
+/// 용언에 어미를 적용하여 활용형을 반환합니다. `postfix_word`의 편의 별칭입니다.
+pub fn conjugate(yongeon: &Yongeon, eomi: &Eomi) -> String {
+    postfix_word(yongeon, eomi)
+}
+
+/// 어미 형태 문자열로 어미를 검색합니다. 정확히 일치하는 첫 번째 어미를 반환합니다.
+///
+/// 예: `find_eomi_exact("세요")` → `Some(&EUSEYO)`
+pub fn find_eomi_exact(s: &str) -> Option<&'static Eomi> {
+    EOMIS
+        .iter()
+        .find(|(_, eomi)| eomi.matches(s))
+        .map(|(_, eomi)| *eomi)
 }
