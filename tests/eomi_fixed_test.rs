@@ -95,3 +95,50 @@ fn test_rieul_ge() {
 fn test_rieul_ja() {
     assert_eq!(postfix_word(&rieul_verb("살다", "살"), &fixed::JA), "살자");
 }
+
+// --- 새 Fixed 어미 ---
+
+#[test]
+fn test_da_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &fixed::DA), "먹다");
+}
+
+#[test]
+fn test_da_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &fixed::DA), "가다");
+}
+
+#[test]
+fn test_jiman_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &fixed::JIMAN), "먹지만");
+}
+
+#[test]
+fn test_jiman_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &fixed::JIMAN), "가지만");
+}
+
+#[test]
+fn test_geona() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &fixed::GEONA), "먹거나");
+}
+
+#[test]
+fn test_neunde() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &fixed::NEUNDE), "먹는데");
+}
+
+#[test]
+fn test_daga() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &fixed::DAGA), "먹다가");
+}
+
+#[test]
+fn test_dorok() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &fixed::DOROK), "먹도록");
+}
+
+#[test]
+fn test_damyeon() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &fixed::DAMYEON), "먹다면");
+}
