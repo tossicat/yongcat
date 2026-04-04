@@ -1,18 +1,24 @@
 //! ## 어미 검색 통합 테스트
 //!
 //! `load_eomis()`로 빌드 시 생성된 어미 목록을 로드한 뒤,
-//! `find_eomi`가 올바른 결과를 반환하는지 검증합니다.
+//! `find_eomi`와 `find_eomi_exact`가 올바른 결과를 반환하는지 검증합니다.
 
 use yongcat::{find_eomi, find_eomi_exact, load_eomis};
 
+// --- load_eomis ---
+
 #[test]
 fn test_load_eomis_count() {
+    // 전체 어미 상수 42개 (AhEo 12 + Fixed 14 + Plain 16)
     let eomis = load_eomis();
     assert_eq!(eomis.len(), 42);
 }
 
+// --- find_eomi ---
+
 #[test]
 fn test_find_ah_eo() {
+    // "어요" → AYO (AhEo의 음성 형태와 정확 일치)
     let eomis = load_eomis();
     let results = find_eomi(&eomis, "어요");
     let names: Vec<&str> = results.iter().map(|(name, _)| *name).collect();
@@ -21,6 +27,7 @@ fn test_find_ah_eo() {
 
 #[test]
 fn test_find_positive_form() {
+    // "아요" → AYO (AhEo의 양성 형태와 정확 일치)
     let eomis = load_eomis();
     let results = find_eomi(&eomis, "아요");
     let names: Vec<&str> = results.iter().map(|(name, _)| *name).collect();
@@ -29,6 +36,7 @@ fn test_find_positive_form() {
 
 #[test]
 fn test_find_fixed() {
+    // "고" → GO (Fixed와 정확 일치)
     let eomis = load_eomis();
     let results = find_eomi(&eomis, "고");
     let names: Vec<&str> = results.iter().map(|(name, _)| *name).collect();
@@ -37,6 +45,7 @@ fn test_find_fixed() {
 
 #[test]
 fn test_find_plain() {
+    // "은" → EUN (Plain의 받침형과 정확 일치)
     let eomis = load_eomis();
     let results = find_eomi(&eomis, "은");
     let names: Vec<&str> = results.iter().map(|(name, _)| *name).collect();
@@ -45,7 +54,7 @@ fn test_find_plain() {
 
 #[test]
 fn test_find_multiple_matches() {
-    // "어요"는 AYO와 ASS_EOYO 양쪽의 음성 형태에 포함
+    // "었어요" → ASS_EOYO (form.1과 정확 일치)
     let eomis = load_eomis();
     let results = find_eomi(&eomis, "었어요");
     let names: Vec<&str> = results.iter().map(|(name, _)| *name).collect();
@@ -54,6 +63,7 @@ fn test_find_multiple_matches() {
 
 #[test]
 fn test_find_nonexistent() {
+    // 존재하지 않는 어미는 빈 결과
     let eomis = load_eomis();
     let results = find_eomi(&eomis, "없는어미");
     assert!(results.is_empty());
@@ -63,7 +73,7 @@ fn test_find_nonexistent() {
 
 #[test]
 fn test_find_eomi_exact_plain() {
-    // "세요" → EUSEYO (Plain의 no_coda 형태와 정확 일치)
+    // "세요" → EUSEYO (Plain의 무받침형과 정확 일치)
     let eomi = find_eomi_exact("세요");
     assert!(eomi.is_some());
 }
@@ -84,6 +94,7 @@ fn test_find_eomi_exact_fixed() {
 
 #[test]
 fn test_find_eomi_exact_nonexistent() {
+    // 존재하지 않는 어미는 None
     assert!(find_eomi_exact("없는어미").is_none());
 }
 

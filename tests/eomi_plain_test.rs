@@ -17,6 +17,10 @@ fn bieut_adj(base: &'static str, eogan: &str) -> Yongeon<'static> {
     Yongeon::new(base, "", eogan, YongeonType::Adjective, IrregularType::Bieut)
 }
 
+fn bieut_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Bieut)
+}
+
 fn siot_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
     Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Siot)
 }
@@ -33,26 +37,31 @@ fn hieut_adj(base: &'static str, eogan: &str) -> Yongeon<'static> {
 
 #[test]
 fn test_eun_with_coda() {
+    // 먹다 + 은 → 먹은 (관형사형, 과거)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUN), "먹은");
 }
 
 #[test]
 fn test_eul_with_coda() {
+    // 먹다 + 을 → 먹을 (관형사형, 미래)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUL), "먹을");
 }
 
 #[test]
 fn test_eumyeon_with_coda() {
+    // 먹다 + 으면 → 먹으면 (조건)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUMYEON), "먹으면");
 }
 
 #[test]
 fn test_euni_with_coda() {
+    // 먹다 + 으니 → 먹으니 (이유)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUNI), "먹으니");
 }
 
 #[test]
 fn test_seumnida_with_coda() {
+    // 먹다 + 습니다 → 먹습니다 (합쇼체)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::SEUMNIDA), "먹습니다");
 }
 
@@ -60,26 +69,31 @@ fn test_seumnida_with_coda() {
 
 #[test]
 fn test_eun_without_coda() {
+    // 가다 + ㄴ → 간 (무받침형 선택, 자모 합성)
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUN), "간");
 }
 
 #[test]
 fn test_eul_without_coda() {
+    // 가다 + ㄹ → 갈 (무받침형 선택, 자모 합성)
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUL), "갈");
 }
 
 #[test]
 fn test_eumyeon_without_coda() {
+    // 가다 + 면 → 가면 (무받침형 선택)
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUMYEON), "가면");
 }
 
 #[test]
 fn test_euni_without_coda() {
+    // 가다 + 니 → 가니 (무받침형 선택)
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUNI), "가니");
 }
 
 #[test]
 fn test_seumnida_without_coda() {
+    // 가다 + ㅂ니다 → 갑니다 (무받침형 선택, 자모 합성)
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::SEUMNIDA), "갑니다");
 }
 
@@ -87,11 +101,13 @@ fn test_seumnida_without_coda() {
 
 #[test]
 fn test_eumyeonseo_with_coda() {
+    // 먹다 + 으면서 → 먹으면서 (동시)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUMYEONSEO), "먹으면서");
 }
 
 #[test]
 fn test_eumyeonseo_without_coda() {
+    // 가다 + 면서 → 가면서
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUMYEONSEO), "가면서");
 }
 
@@ -99,11 +115,13 @@ fn test_eumyeonseo_without_coda() {
 
 #[test]
 fn test_euryeogo_with_coda() {
+    // 먹다 + 으려고 → 먹으려고 (의도)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EURYEOGO), "먹으려고");
 }
 
 #[test]
 fn test_euryeogo_without_coda() {
+    // 가다 + 려고 → 가려고
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EURYEOGO), "가려고");
 }
 
@@ -111,11 +129,13 @@ fn test_euryeogo_without_coda() {
 
 #[test]
 fn test_euseyo_with_coda() {
+    // 먹다 + 으세요 → 먹으세요 (높임 명령)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUSEYO), "먹으세요");
 }
 
 #[test]
 fn test_euseyo_without_coda() {
+    // 가다 + 세요 → 가세요
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUSEYO), "가세요");
 }
 
@@ -123,11 +143,13 @@ fn test_euseyo_without_coda() {
 
 #[test]
 fn test_eureo_with_coda() {
+    // 먹다 + 으러 → 먹으러 (목적, 이동)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUREO), "먹으러");
 }
 
 #[test]
 fn test_eureo_without_coda() {
+    // 가다 + 러 → 가러
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUREO), "가러");
 }
 
@@ -217,69 +239,77 @@ fn test_hieut_seumnida() {
 
 #[test]
 fn test_eunikka_with_coda() {
+    // 먹다 + 으니까 → 먹으니까 (이유, 강조)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUNIKKA), "먹으니까");
 }
 
 #[test]
 fn test_eunikka_without_coda() {
+    // 가다 + 니까 → 가니까
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUNIKKA), "가니까");
 }
 
 #[test]
 fn test_eulkka_with_coda() {
+    // 먹다 + 을까 → 먹을까 (의문·제안)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EULKKA), "먹을까");
 }
 
 #[test]
 fn test_eulkka_without_coda() {
+    // 가다 + ㄹ까 → 갈까 (자모 합성)
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EULKKA), "갈까");
 }
 
 #[test]
 fn test_eulge_with_coda() {
+    // 먹다 + 을게 → 먹을게 (약속·의지)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EULGE), "먹을게");
 }
 
 #[test]
 fn test_eulge_without_coda() {
+    // 가다 + ㄹ게 → 갈게 (자모 합성)
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EULGE), "갈게");
 }
 
 #[test]
 fn test_eullae_with_coda() {
+    // 먹다 + 을래 → 먹을래 (의향, 반말)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EULLAE), "먹을래");
 }
 
 #[test]
 fn test_eullae_without_coda() {
+    // 가다 + ㄹ래 → 갈래 (자모 합성)
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EULLAE), "갈래");
 }
 
 #[test]
 fn test_eulssurok_with_coda() {
+    // 먹다 + 을수록 → 먹을수록 (점진)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EULSSUROK), "먹을수록");
 }
 
 #[test]
 fn test_eulssurok_without_coda() {
+    // 가다 + ㄹ수록 → 갈수록 (자모 합성)
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EULSSUROK), "갈수록");
 }
 
 #[test]
 fn test_eupsida_with_coda() {
+    // 먹다 + 읍시다 → 먹읍시다 (격식 청유)
     assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUPSIDA), "먹읍시다");
 }
 
 #[test]
 fn test_eupsida_without_coda() {
+    // 가다 + ㅂ시다 → 갑시다 (자모 합성)
     assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUPSIDA), "갑시다");
 }
 
 // --- 자모 합성 + 불규칙 조합 ---
-
-fn bieut_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
-    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Bieut)
-}
 
 #[test]
 fn test_bieut_eun() {
