@@ -154,3 +154,43 @@ fn test_eu() {
     // 으불규칙은 규칙 활용의 ㅡ 탈락으로 처리
     assert_eq!(postfix_word(&eu_adj("바쁘다", "바쁘"), &ah_eo::AYO), "바빠요");
 }
+
+// --- 새 AhEo 어미 ---
+
+#[test]
+fn test_ajida_positive() {
+    // 좋다 + 아지다 → 좋아지다
+    let adj = Yongeon::new("좋다", "", "좋", YongeonType::Adjective, IrregularType::Regular);
+    assert_eq!(postfix_word(&adj, &ah_eo::AJIDA), "좋아지다");
+}
+
+#[test]
+fn test_ajida_negative() {
+    // 커지다: 크 + 어지다 → 커지다 (ㅡ 탈락)
+    let adj = Yongeon::new("크다", "", "크", YongeonType::Adjective, IrregularType::Regular);
+    assert_eq!(postfix_word(&adj, &ah_eo::AJIDA), "커지다");
+}
+
+#[test]
+fn test_aboda_positive() {
+    // 가다 + 아보다 → 가보다 (ㅏ+ㅏ 탈락)
+    assert_eq!(postfix_word(&verb("가다", "가"), &ah_eo::ABODA), "가보다");
+}
+
+#[test]
+fn test_aboda_negative() {
+    // 먹다 + 어보다 → 먹어보다
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &ah_eo::ABODA), "먹어보다");
+}
+
+#[test]
+fn test_adalla_positive() {
+    // 가다 + 아달라 → 가달라 (ㅏ+ㅏ 탈락)
+    assert_eq!(postfix_word(&verb("가다", "가"), &ah_eo::ADALLA), "가달라");
+}
+
+#[test]
+fn test_adalla_negative() {
+    // 읽다 + 어달라 → 읽어달라
+    assert_eq!(postfix_word(&verb("읽다", "읽"), &ah_eo::ADALLA), "읽어달라");
+}
