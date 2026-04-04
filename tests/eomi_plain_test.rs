@@ -212,3 +212,89 @@ fn test_hieut_seumnida() {
     // 그렇다 + 습니다 → 그렇습니다 (자음 시작 → 변환 없음)
     assert_eq!(postfix_word(&hieut_adj("그렇다", "그렇"), &plain::SEUMNIDA), "그렇습니다");
 }
+
+// --- 새 Plain 어미 ---
+
+#[test]
+fn test_eunikka_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUNIKKA), "먹으니까");
+}
+
+#[test]
+fn test_eunikka_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUNIKKA), "가니까");
+}
+
+#[test]
+fn test_eulkka_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EULKKA), "먹을까");
+}
+
+#[test]
+fn test_eulkka_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EULKKA), "갈까");
+}
+
+#[test]
+fn test_eulge_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EULGE), "먹을게");
+}
+
+#[test]
+fn test_eulge_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EULGE), "갈게");
+}
+
+#[test]
+fn test_eullae_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EULLAE), "먹을래");
+}
+
+#[test]
+fn test_eullae_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EULLAE), "갈래");
+}
+
+#[test]
+fn test_eulssurok_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EULSSUROK), "먹을수록");
+}
+
+#[test]
+fn test_eulssurok_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EULSSUROK), "갈수록");
+}
+
+#[test]
+fn test_eupsida_with_coda() {
+    assert_eq!(postfix_word(&verb("먹다", "먹"), &plain::EUPSIDA), "먹읍시다");
+}
+
+#[test]
+fn test_eupsida_without_coda() {
+    assert_eq!(postfix_word(&verb("가다", "가"), &plain::EUPSIDA), "갑시다");
+}
+
+// --- 자모 합성 + 불규칙 조합 ---
+
+fn bieut_verb(base: &'static str, eogan: &str) -> Yongeon<'static> {
+    Yongeon::new(base, "", eogan, YongeonType::Verb, IrregularType::Bieut)
+}
+
+#[test]
+fn test_bieut_eun() {
+    // 돕다 + 은/ㄴ → 도운 (ㅂ→우, 무받침형 ㄴ, 자모 합성)
+    assert_eq!(postfix_word(&bieut_verb("돕다", "돕"), &plain::EUN), "도운");
+}
+
+#[test]
+fn test_siot_eun() {
+    // 짓다 + 은/ㄴ → 진 (ㅅ 탈락, 무받침형 ㄴ, 자모 합성)
+    assert_eq!(postfix_word(&siot_verb("짓다", "짓"), &plain::EUN), "진");
+}
+
+#[test]
+fn test_hieut_eul() {
+    // 그렇다 + 을/ㄹ → 그럴 (ㅎ 탈락, 무받침형 ㄹ, 자모 합성)
+    assert_eq!(postfix_word(&hieut_adj("그렇다", "그렇"), &plain::EUL), "그럴");
+}
