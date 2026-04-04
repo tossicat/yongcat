@@ -7,7 +7,7 @@
 //! - `postfix`: 단어 문자열로 동음이의어를 포함한 전체 활용형 생성
 
 use yongcat::eomi::ah_eo;
-use yongcat::{find_yongeon, load_yongeons, postfix, postfix_word};
+use yongcat::{conjugate, find_yongeon, load_yongeons, lookup, lookup_all, postfix, postfix_word};
 
 // --- postfix_word: 해요체 (ah_eo::AYO) ---
 //
@@ -612,4 +612,49 @@ fn test_postfix_all_conjugated() {
     let results = postfix(&yongeons, "먹다", &ah_eo::AYO);
     assert!(!results.is_empty());
     assert!(results.iter().all(|(_, conjugated)| conjugated == "먹어요"));
+}
+
+// --- 편의 API: lookup, lookup_all, conjugate ---
+
+#[test]
+fn test_lookup() {
+    let verb = lookup("먹다");
+    assert_eq!(verb.base_form, "먹다");
+}
+
+#[test]
+fn test_lookup_all_homonyms() {
+    let results = lookup_all("걷다");
+    assert!(results.len() >= 2, "걷다는 동음이의어가 2개 이상이어야 함");
+}
+
+#[test]
+fn test_lookup_all_single() {
+    let results = lookup_all("가다");
+    assert!(!results.is_empty());
+}
+
+#[test]
+#[should_panic(expected = "용언을 찾을 수 없습니다")]
+fn test_lookup_nonexistent() {
+    lookup("없는단어다");
+}
+
+#[test]
+fn test_conjugate_equals_postfix_word() {
+    let verb = lookup("먹다");
+    assert_eq!(conjugate(verb, &ah_eo::AYO), postfix_word(verb, &ah_eo::AYO));
+}
+
+#[test]
+fn test_conjugate_with_lookup() {
+    assert_eq!(conjugate(lookup("공격하다"), &ah_eo::ASS_SEUMNIDA), "공격했습니다");
+}
+
+#[test]
+fn test_conjugate_hada_separated() {
+    // 하다를 분리해서 활용
+    let ha = lookup("하다");
+    let result = format!("공격{}", conjugate(ha, &ah_eo::ASS_SEUMNIDA));
+    assert_eq!(result, "공격했습니다");
 }
