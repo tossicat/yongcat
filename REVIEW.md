@@ -24,7 +24,7 @@ yongcat/
 │   ├── eomi_find_test.rs      # 어미 검색 테스트 (12개)
 │   ├── eomi_fixed_test.rs     # 고정 형태 어미 테스트 (24개)
 │   ├── eomi_plain_test.rs     # 받침 유무 어미 테스트 (45개)
-│   ├── postfix_test.rs        # 활용 파이프라인 통합 테스트 (71개)
+│   ├── postfix_test.rs        # 활용 파이프라인 통합 테스트 (76개)
 │   └── yongeon_test.rs        # 용언 검색 통합 테스트 (7개)
 └── src/
     ├── lib.rs                 # 크레이트 루트, lookup, conjugate, find_eomi_exact, postfix, postfix_word
@@ -32,9 +32,9 @@ yongcat/
     │   └── import.rs          # CLI: 사용자 CSV 검증 및 user_list.csv 생성
     ├── eomi/
     │   ├── mod.rs             # Eomi 열거형, AhEoForm 타입 (2-튜플), Eomi::matches()
-    │   ├── ah_eo.rs           # 아/어 계열 어미 상수 12개
-    │   ├── fixed.rs           # 고정 형태 어미 상수 14개
-    │   └── plain.rs           # 받침 유무 어미 상수 16개
+    │   ├── ah_eo.rs           # 아/어 계열 어미 상수 13개
+    │   ├── fixed.rs           # 고정 형태 어미 상수 16개
+    │   └── plain.rs           # 받침 유무 어미 상수 17개
     ├── irregular/
     │   ├── mod.rs             # 불규칙 유형별 디스패치
     │   ├── yeo.rs             # 여불규칙
@@ -73,9 +73,9 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 
 | 유형 | 파일 | 상수 |
 |------|------|------|
-| AhEo (아/어 계열) | `ah_eo.rs` | A, AYO, ASEO, ADO, AYA, ARA, ASS, ASS_EOYO, ASS_SEUMNIDA, AJIDA, ABODA, ADALLA (12개) |
-| Fixed (고정 형태) | `fixed.rs` | GO, JI, NEUN, GE, JA, GESS_EOYO, GESS_SEUMNIDA, DA, JIMAN, GEONA, NEUNDE, DAGA, DOROK, DAMYEON (14개) |
-| Plain (받침 유무) | `plain.rs` | EUN, EUL, EUMYEON, EUNI, SEUMNIDA, EUMYEONSEO, EURYEOGO, EUSEYO, EUREO, EUSYEOSS, EUNIKKA, EULKKA, EULGE, EULLAE, EULSSUROK, EUPSIDA (16개) |
+| AhEo (아/어 계열) | `ah_eo.rs` | A, AYO, ASEO, ADO, AYA, ARA, ASS, ASS_EOYO, ASS_SEUMNIDA, AJIDA, ABODA, ADALLA, AJUDA (13개) |
+| Fixed (고정 형태) | `fixed.rs` | GO, JI, NEUN, GE, JA, GESS_EOYO, GESS_SEUMNIDA, DA, JIMAN, GEONA, NEUNDE, DAGA, DOROK, DAMYEON, NA, NYA (16개) |
+| Plain (받침 유무) | `plain.rs` | EUN, EUL, EUMYEON, EUNI, SEUMNIDA, EUMYEONSEO, EURYEOGO, EUSEYO, EUREO, EUSYEOSS, EUNIKKA, EULKKA, EULGE, EULLAE, EULSSUROK, EUPSIDA, NEUNDA (17개) |
 
 `AhEoForm`은 2-튜플 `(양성, 음성)`입니다. 여불규칙의 여 형태는 음성 형태에서 ㅓ→ㅕ 변환으로 생성합니다.
 
@@ -116,11 +116,12 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 - `Eomi::matches()`: 문자열 매칭 메서드
 - `find_eomi()`: 어미 문자열 검색
 - `lookup()` / `conjugate()` / `find_eomi_exact()`: 편의 API (전역 데이터 사용)
+- `conjugate_checked()`: 품사별 어미 제한 검사 (형용사 + 동사 전용 어미 → Err)
 - 어미 상수 플랫 re-export: `use yongcat::*;`로 `AYO`, `GO`, `EUN` 등 직접 접근
 
 ## 테스트 현황
 
-총 300개 테스트 통과
+총 306개 테스트 통과
 
 | 위치 | 테스트 수 | 내용 |
 |------|-----------|------|
@@ -141,11 +142,10 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 | `tests/eomi_find_test.rs` | 12개 | load_eomis 개수, find_eomi 검색, find_eomi_exact |
 | `tests/eomi_fixed_test.rs` | 24개 | 상수 × 받침 유무 + ㄹ불규칙 + 새 어미 |
 | `tests/eomi_plain_test.rs` | 45개 | 상수 × 받침 유무 + 불규칙 + 새 어미 + 자모 합성×불규칙 |
-| `tests/postfix_test.rs` | 71개 | 규칙/불규칙/ㅡ탈락/동음이의어/편의API 통합 |
+| `tests/postfix_test.rs` | 76개 | 규칙/불규칙/ㅡ탈락/동음이의어/편의API/품사제한 통합 |
 | `tests/yongeon_test.rs` | 7개 | find_yongeon, find_eogan |
 | doctest | 1개 | Yongeon::new 예시 |
 
 ## 미구현 사항
 
-- 품사별 어미 제한 없음 (동사 전용 어미를 형용사에 적용해도 오류 없이 생성)
 - 등급 필터 테스트 부재

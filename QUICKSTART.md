@@ -112,7 +112,7 @@ let npc_line = format!("여기서 {}.", result);
 
 ```rust
 let eomis = yongcat::load_eomis();
-// 42개 어미의 (이름, &Eomi) 목록
+// 46개 어미의 (이름, &Eomi) 목록
 ```
 
 ### find_eomi — 문자열로 어미 검색
@@ -207,6 +207,7 @@ let result = yongcat::postfix_word(meok, &ah_eo::AYO);
 | `AJIDA` | 아지다/어지다 | 피동·상태변화 | 가지다, 먹어지다 |
 | `ABODA` | 아보다/어보다 | 시행 | 가보다, 먹어보다 |
 | `ADALLA` | 아달라/어달라 | 요청 | 가달라, 먹어달라 |
+| `AJUDA` | 아주다/어주다 | 수혜 | 가주다, 먹어주다 |
 
 ### fixed 어미 목록 (고정 형태)
 
@@ -226,6 +227,8 @@ let result = yongcat::postfix_word(meok, &ah_eo::AYO);
 | `DAGA` | 다가 | 연결 (전환) | 먹다가, 가다가 |
 | `DOROK` | 도록 | 연결 (목적·정도) | 먹도록, 가도록 |
 | `DAMYEON` | 다면 | 연결 (가정) | 먹다면, 가다면 |
+| `NA` | 나 | 의문 (반말) | 먹나, 가나 |
+| `NYA` | 냐 | 의문 (반말, 구어) | 먹냐, 가냐 |
 
 ### plain 어미 목록 (받침 유무)
 
@@ -247,6 +250,7 @@ let result = yongcat::postfix_word(meok, &ah_eo::AYO);
 | `EULLAE` | 을래/ㄹ래 | 종결 (의향, 반말) | 먹을래, 갈래 |
 | `EULSSUROK` | 을수록/ㄹ수록 | 연결 (점진) | 먹을수록, 갈수록 |
 | `EUPSIDA` | 읍시다/ㅂ시다 | 종결 (격식 청유) | 먹읍시다, 갑시다 |
+| `NEUNDA` | 는다/ㄴ다 | 동사 현재 평서 (해라체) | 먹는다, 간다 |
 
 ### 불규칙 활용 예시
 

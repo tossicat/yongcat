@@ -16,7 +16,7 @@
 let yongeons = yongcat::load_yongeons();
 let eomis = yongcat::load_eomis();
 println!("용언: {}개", yongeons.len());  // 1721
-println!("어미: {}개", eomis.len());     // 42
+println!("어미: {}개", eomis.len());     // 46
 ```
 
 ## 사용법
@@ -39,11 +39,11 @@ let result = yongcat::postfix_word(meok, &ah_eo::ASS);
 // "먹었"
 ```
 
-## 어미 (42개)
+## 어미 (46개)
 
 `load_eomis()`로 전체 어미 목록을 로드하고, `find_eomi()`로 문자열 검색할 수 있습니다.
 
-### ah_eo (아/어 계열, 12개)
+### ah_eo (아/어 계열, 13개)
 
 | 상수 | 어미 | 용도 |
 |------|------|------|
@@ -59,8 +59,9 @@ let result = yongcat::postfix_word(meok, &ah_eo::ASS);
 | `AJIDA` | 아지다/어지다 | 피동·상태변화 |
 | `ABODA` | 아보다/어보다 | 시행 |
 | `ADALLA` | 아달라/어달라 | 요청 |
+| `AJUDA` | 아주다/어주다 | 수혜 |
 
-### fixed (고정 형태, 14개)
+### fixed (고정 형태, 16개)
 
 | 상수 | 어미 | 용도 |
 |------|------|------|
@@ -78,8 +79,10 @@ let result = yongcat::postfix_word(meok, &ah_eo::ASS);
 | `DAGA` | 다가 | 연결 (전환) |
 | `DOROK` | 도록 | 연결 (목적·정도) |
 | `DAMYEON` | 다면 | 연결 (가정) |
+| `NA` | 나 | 의문 (반말) |
+| `NYA` | 냐 | 의문 (반말, 구어) |
 
-### plain (받침 유무, 16개)
+### plain (받침 유무, 17개)
 
 | 상수 | 어미 | 용도 |
 |------|------|------|
@@ -99,6 +102,7 @@ let result = yongcat::postfix_word(meok, &ah_eo::ASS);
 | `EULLAE` | 을래/ㄹ래 | 종결 (의향, 반말) |
 | `EULSSUROK` | 을수록/ㄹ수록 | 연결 (점진) |
 | `EUPSIDA` | 읍시다/ㅂ시다 | 종결 (격식 청유) |
+| `NEUNDA` | 는다/ㄴ다 | 동사 현재 평서 (해라체) |
 
 ## 활용 규칙
 
