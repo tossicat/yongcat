@@ -7,22 +7,29 @@ yongcat/
 ├── Cargo.toml
 ├── build.rs
 ├── .gitattributes             # data/*.csv LF 강제
+├── .gitignore
 ├── about_data.md              # 데이터 설명 문서
 ├── README.md                  # 프로젝트 소개, 사용법, 활용 규칙 현황, 한계
 ├── QUICKSTART.md              # 시작 가이드
 ├── RULES.md                   # 활용 규칙 구현 가이드
 ├── REVIEW.md                  # 이 파일
+├── USER_DATA.md               # 사용자 용언 데이터 추가 가이드
+├── build/
+│   └── validate.rs            # CSV 행 검증 로직
 ├── data/
-│   └── yong_list.csv          # 용언 1,721개
+│   ├── yong_list.csv          # 용언 1,721개
+│   └── example.csv            # 사용자 CSV 형식 참고용 예시
 ├── tests/
-│   ├── eomi_ah_eo_test.rs     # 아/어 계열 어미 테스트 (20개)
-│   ├── eomi_find_test.rs      # 어미 검색 테스트 (7개)
-│   ├── eomi_fixed_test.rs     # 고정 형태 어미 테스트 (15개)
-│   ├── eomi_plain_test.rs     # 받침 유무 어미 테스트 (30개)
-│   ├── postfix_test.rs        # 활용 파이프라인 통합 테스트 (64개)
+│   ├── eomi_ah_eo_test.rs     # 아/어 계열 어미 테스트 (26개)
+│   ├── eomi_find_test.rs      # 어미 검색 테스트 (12개)
+│   ├── eomi_fixed_test.rs     # 고정 형태 어미 테스트 (24개)
+│   ├── eomi_plain_test.rs     # 받침 유무 어미 테스트 (45개)
+│   ├── postfix_test.rs        # 활용 파이프라인 통합 테스트 (71개)
 │   └── yongeon_test.rs        # 용언 검색 통합 테스트 (7개)
 └── src/
     ├── lib.rs                 # 크레이트 루트, lookup, conjugate, find_eomi_exact, postfix, postfix_word
+    ├── bin/
+    │   └── import.rs          # CLI: 사용자 CSV 검증 및 user_list.csv 생성
     ├── eomi/
     │   ├── mod.rs             # Eomi 열거형, AhEoForm 타입 (2-튜플), Eomi::matches()
     │   ├── ah_eo.rs           # 아/어 계열 어미 상수 12개
@@ -34,11 +41,11 @@ yongcat/
     │   ├── dieut.rs           # ㄷ불규칙
     │   ├── bieut.rs           # ㅂ불규칙
     │   ├── siot.rs            # ㅅ불규칙
+    │   ├── hieut.rs           # ㅎ불규칙
     │   ├── rieul.rs           # ㄹ불규칙
-    │   ├── u.rs               # 우불규칙
-    │   ├── hieut.rs            # ㅎ불규칙
-    │   ├── reo.rs             # 러불규칙
     │   ├── reu.rs             # 르불규칙
+    │   ├── u.rs               # 우불규칙
+    │   ├── reo.rs             # 러불규칙
     │   └── eu.rs              # 으불규칙 (문서만, 규칙 활용으로 처리)
     ├── join.rs                # select → irregular → regular
     ├── merge.rs               # apply → irregular → regular
@@ -100,7 +107,9 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 
 ### 기타
 
-- `build.rs`: CSV → `load_yongeons()`, 소스 파싱 → `load_eomis()` 코드 생성, 등급 필터링
+- `build.rs`: CSV → `load_yongeons()`, 소스 파싱 → `load_eomis()` 코드 생성, 등급 필터링, `user_list.csv` 자동 로드
+- `build/validate.rs`: CSV 행 검증 로직 (컬럼 수, 기본형, 어간, 품사, 활용 유형)
+- `src/bin/import.rs`: 사용자 CSV 검증 CLI (`cargo run --bin import`)
 - `syllable.rs`: 한글 유니코드 분해/합성, `starts_with_vowel()`, `combine_jamo()`, 외부 의존성 없음
 - `Yongeon::new()`: 빈 어간 assert 포함
 - `Yongeon::moeum_joha()`: 모음조화 판별 통일 메서드
@@ -111,7 +120,7 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 
 ## 테스트 현황
 
-총 263개 테스트 통과
+총 300개 테스트 통과
 
 | 위치 | 테스트 수 | 내용 |
 |------|-----------|------|
@@ -128,11 +137,11 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 | `irregular/reu.rs` | 11개 | join/merge × 양성/음성/과거/다음절/형용사/Plain/Fixed |
 | `irregular/u.rs` | 3개 | merge × AhEo/Past/Plain |
 | `irregular/reo.rs` | 5개 | join/merge × AhEo/Past/Plain |
-| `tests/eomi_ah_eo_test.rs` | 20개 | 규칙 8 + 불규칙 12 |
+| `tests/eomi_ah_eo_test.rs` | 26개 | 규칙 8 + 불규칙 12 + 새 어미 6 |
 | `tests/eomi_find_test.rs` | 12개 | load_eomis 개수, find_eomi 검색, find_eomi_exact |
-| `tests/eomi_fixed_test.rs` | 15개 | 상수 × 받침 유무 + ㄹ불규칙 |
-| `tests/eomi_plain_test.rs` | 30개 | 상수 × 받침 유무 + ㄷ/ㅂ/ㅅ/ㄹ/ㅎ불규칙 |
-| `tests/postfix_test.rs` | 64개 | 규칙/불규칙/ㅡ탈락/동음이의어 통합 |
+| `tests/eomi_fixed_test.rs` | 24개 | 상수 × 받침 유무 + ㄹ불규칙 + 새 어미 |
+| `tests/eomi_plain_test.rs` | 45개 | 상수 × 받침 유무 + 불규칙 + 새 어미 + 자모 합성×불규칙 |
+| `tests/postfix_test.rs` | 71개 | 규칙/불규칙/ㅡ탈락/동음이의어/편의API 통합 |
 | `tests/yongeon_test.rs` | 7개 | find_yongeon, find_eogan |
 | doctest | 1개 | Yongeon::new 예시 |
 
