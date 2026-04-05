@@ -11,7 +11,7 @@ use yongcat::{find_eomi, find_eomi_exact, load_eomis};
 fn test_load_eomis_count() {
     // 전체 어미 상수 42개 (AhEo 12 + Fixed 14 + Plain 16)
     let eomis = load_eomis();
-    assert_eq!(eomis.len(), 42);
+    assert_eq!(eomis.len(), 46);
 }
 
 // --- find_eomi ---

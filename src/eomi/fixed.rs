@@ -44,3 +44,9 @@ pub const DOROK: Eomi = Eomi::Fixed("도록");
 
 /// 다면 — 연결 (가정): 먹 + 다면 → 먹다면, 가 + 다면 → 가다면
 pub const DAMYEON: Eomi = Eomi::Fixed("다면");
+
+/// 나 — 의문 (반말): 먹 + 나 → 먹나, 가 + 나 → 가나
+pub const NA: Eomi = Eomi::Fixed("나");
+
+/// 냐 — 의문 (반말, 구어): 먹 + 냐 → 먹냐, 가 + 냐 → 가냐
+pub const NYA: Eomi = Eomi::Fixed("냐");

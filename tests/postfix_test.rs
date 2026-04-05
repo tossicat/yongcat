@@ -698,15 +698,15 @@ fn test_checked_adj_with_common_eomi() {
     assert_eq!(conjugate_checked(adj, &ah_eo::AYO).unwrap(), "예뻐요");
 }
 
-/// 동사 전용 어미 10개 모두 형용사에서 Err 반환
+/// 동사 전용 어미 12개 모두 형용사에서 Err 반환
 #[test]
 fn test_checked_all_verb_only_eomis() {
     let adj = lookup("예쁘다");
     let verb_only = [
-        &yongcat::ABODA, &yongcat::ADALLA, &yongcat::NEUN,
-        &yongcat::JA, &yongcat::NEUNDE, &yongcat::EURYEOGO,
-        &yongcat::EUREO, &yongcat::EULGE, &yongcat::EULLAE,
-        &yongcat::EUPSIDA,
+        &yongcat::ABODA, &yongcat::ADALLA, &yongcat::AJUDA,
+        &yongcat::NEUN, &yongcat::JA, &yongcat::NEUNDE,
+        &yongcat::EURYEOGO, &yongcat::EUREO, &yongcat::EULGE,
+        &yongcat::EULLAE, &yongcat::EUPSIDA, &yongcat::NEUNDA,
     ];
     for eomi in verb_only {
         assert!(
@@ -716,15 +716,15 @@ fn test_checked_all_verb_only_eomis() {
     }
 }
 
-/// 동사 전용 어미 10개 모두 동사에서 Ok 반환
+/// 동사 전용 어미 12개 모두 동사에서 Ok 반환
 #[test]
 fn test_checked_all_verb_only_eomis_with_verb() {
     let verb = lookup("먹다");
     let verb_only = [
-        &yongcat::ABODA, &yongcat::ADALLA, &yongcat::NEUN,
-        &yongcat::JA, &yongcat::NEUNDE, &yongcat::EURYEOGO,
-        &yongcat::EUREO, &yongcat::EULGE, &yongcat::EULLAE,
-        &yongcat::EUPSIDA,
+        &yongcat::ABODA, &yongcat::ADALLA, &yongcat::AJUDA,
+        &yongcat::NEUN, &yongcat::JA, &yongcat::NEUNDE,
+        &yongcat::EURYEOGO, &yongcat::EUREO, &yongcat::EULGE,
+        &yongcat::EULLAE, &yongcat::EUPSIDA, &yongcat::NEUNDA,
     ];
     for eomi in verb_only {
         assert!(

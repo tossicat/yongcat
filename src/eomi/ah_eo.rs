@@ -43,3 +43,6 @@ pub const ABODA: Eomi = Eomi::AhEo(("아보다", "어보다"));
 
 /// 아달라/어달라 — 요청: 읽 + 어달라 → 읽어달라, 가 + 아달라 → 가달라
 pub const ADALLA: Eomi = Eomi::AhEo(("아달라", "어달라"));
+
+/// 아주다/어주다 — 수혜: 가 + 아주다 → 가주다, 먹 + 어주다 → 먹어주다
+pub const AJUDA: Eomi = Eomi::AhEo(("아주다", "어주다"));

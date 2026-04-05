@@ -121,8 +121,8 @@ pub fn find_eomi_exact(s: &str) -> Option<&'static Eomi> {
 
 /// 동사 전용 어미 목록입니다. 형용사에 적용하면 문법적으로 잘못된 활용형이 생성됩니다.
 const VERB_ONLY_EOMIS: &[&Eomi] = &[
-    &ABODA, &ADALLA, &NEUN, &JA, &NEUNDE,
-    &EURYEOGO, &EUREO, &EULGE, &EULLAE, &EUPSIDA,
+    &ABODA, &ADALLA, &AJUDA, &NEUN, &JA, &NEUNDE,
+    &EURYEOGO, &EUREO, &EULGE, &EULLAE, &EUPSIDA, &NEUNDA,
 ];
 
 /// 주어진 어미가 동사 전용인지 확인합니다.

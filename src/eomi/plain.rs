@@ -52,3 +52,6 @@ pub const EULSSUROK: Eomi = Eomi::Plain("을수록", "ㄹ수록");
 
 /// 읍시다/ㅂ시다 — 종결 (격식 청유): 먹 + 읍시다 → 먹읍시다, 가 + ㅂ시다 → 갑시다
 pub const EUPSIDA: Eomi = Eomi::Plain("읍시다", "ㅂ시다");
+
+/// 는다/ㄴ다 — 동사 현재 평서 (해라체): 먹 + 는다 → 먹는다, 가 + ㄴ다 → 간다
+pub const NEUNDA: Eomi = Eomi::Plain("는다", "ㄴ다");
