@@ -5,6 +5,10 @@ edition = "2024"
 description = "한국어 용언(동사/형용사) 활용 라이브러리"
 license = "MIT"
 
+[[bin]]
+name = "import"
+path = "src/bin/import.rs"
+
 [features]
 grade-a = []
 grade-b = []
