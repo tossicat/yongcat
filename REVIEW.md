@@ -146,6 +146,29 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 | `tests/yongeon_test.rs` | 7개 | find_yongeon, find_eogan |
 | doctest | 1개 | Yongeon::new 예시 |
 
+## 다른 프로젝트에서 사용
+
+라이브러리로서 필요한 조건을 갖추고 있으며, 다른 프로젝트에서 바로 사용할 수 있습니다.
+
+- 306개 테스트 전체 통과, clippy 경고 0개
+- 외부 의존성 없음 (순수 Rust)
+- `cargo publish --dry-run` 통과 (44개 파일, 273.4KB)
+- MIT 라이선스
+
+### git 의존성으로 사용
+
+```toml
+[dependencies]
+yongcat = { git = "https://github.com/tossicat/yongcat" }
+```
+
+### crates.io에서 사용 (배포 후)
+
+```toml
+[dependencies]
+yongcat = "0.8"
+```
+
 ## 미구현 사항
 
 - 등급 필터 테스트 부재
