@@ -23,6 +23,12 @@ const VALID_POS: &[&str] = &["동사", "형용사"];
 const VALID_CONJUGATIONS: &[&str] = &[
     "규", "ㄷ", "ㅂ", "ㅎ", "ㄹ", "ㅅ", "르", "우", "여", "러", "으",
 ];
+const VALID_GRADES: &[&str] = &["A", "B", "C", ""];
+
+/// 완성형 한글(가~힣) 범위인지 확인합니다.
+fn is_hangul_char(c: char) -> bool {
+    ('\u{AC00}'..='\u{D7A3}').contains(&c)
+}
 
 /// CSV 한 행을 검증합니다.
 ///
@@ -94,6 +100,30 @@ pub fn validate_row(line_str: &str, line_num: usize) -> RowResult {
         return RowResult::Error {
             line: line_num,
             message: format!("유효하지 않은 활용 유형: \"{}\"", conjugation),
+        };
+    }
+
+    // dict_id 형식: 비어 있거나 숫자만 허용
+    if !dict_id.is_empty() && !dict_id.chars().all(|c| c.is_ascii_digit()) {
+        return RowResult::Error {
+            line: line_num,
+            message: format!("dict_id는 숫자만 허용됩니다: \"{}\"", dict_id),
+        };
+    }
+
+    // grade 형식: 비어 있거나 A/B/C만 허용
+    if !VALID_GRADES.contains(&grade) {
+        return RowResult::Error {
+            line: line_num,
+            message: format!("유효하지 않은 등급: \"{}\" (A/B/C 또는 빈 값)", grade),
+        };
+    }
+
+    // base_form이 한글로만 구성되어 있는지 확인
+    if !base_form.chars().all(is_hangul_char) {
+        return RowResult::Error {
+            line: line_num,
+            message: format!("기본형에 한글이 아닌 문자가 포함되어 있습니다: \"{}\"", base_form),
         };
     }
 

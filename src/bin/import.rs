@@ -17,29 +17,33 @@ const DATA_DIR: &str = "data";
 const BASE_CSV: &str = "yong_list.csv";
 const OUTPUT_CSV: &str = "user_list.csv";
 
-/// yong_list.csv에서 base_form을 수집합니다.
-fn load_existing() -> HashSet<String> {
+/// yong_list.csv에서 base_form 집합과 (base_form, dict_id) 쌍 집합을 수집합니다.
+fn load_existing() -> (HashSet<String>, HashSet<(String, String)>) {
     let path = format!("{}/{}", DATA_DIR, BASE_CSV);
-    let mut set = HashSet::new();
+    let mut base_forms = HashSet::new();
+    let mut pairs = HashSet::new();
 
     let file = match fs::File::open(&path) {
         Ok(f) => f,
         Err(_) => {
             eprintln!("경고: {}를 열 수 없습니다", path);
-            return set;
+            return (base_forms, pairs);
         }
     };
 
     for (i, line) in BufReader::new(file).lines().enumerate() {
-        if i == 0 { continue; } // 헤더
+        if i == 0 { continue; }
         let line = line.unwrap();
         let fields: Vec<&str> = line.splitn(7, ',').collect();
-        if !fields.is_empty() {
-            set.insert(fields[0].trim().to_string());
+        if fields.len() >= 2 {
+            let bf = fields[0].trim().to_string();
+            let di = fields[1].trim().to_string();
+            base_forms.insert(bf.clone());
+            pairs.insert((bf, di));
         }
     }
 
-    set
+    (base_forms, pairs)
 }
 
 /// data/ 폴더에서 검증 대상 CSV 파일 목록을 반환합니다.
@@ -69,8 +73,9 @@ fn find_user_csv_files() -> Vec<String> {
 /// CSV 파일 하나를 검증합니다.
 fn validate_file(
     filename: &str,
-    existing: &HashSet<String>,
-    seen: &mut HashSet<String>,
+    existing_base_forms: &HashSet<String>,
+    existing_pairs: &HashSet<(String, String)>,
+    seen: &mut HashSet<(String, String)>,
 ) -> (Vec<RowData>, usize, usize, usize) {
     let path = format!("{}/{}", DATA_DIR, filename);
     let file = fs::File::open(&path).unwrap_or_else(|_| panic!("{}를 열 수 없습니다", path));
@@ -86,8 +91,17 @@ fn validate_file(
     for (i, line) in reader.lines().enumerate() {
         let line = line.unwrap();
 
-        // 헤더 건너뛰기 (첫 행이 base_form으로 시작하면)
-        if i == 0 && line.starts_with("base_form") {
+        // 첫 행은 헤더여야 함
+        if i == 0 {
+            let expected = "base_form,dict_id,eogan,pos,conjugation,usage,grade";
+            let trimmed = line.trim_end_matches('\r').trim();
+            if trimmed != expected {
+                println!("  ✗ 헤더 오류 — 첫 행이 올바른 헤더가 아닙니다.");
+                println!("    기대: {}", expected);
+                println!("    실제: {}", trimmed);
+                errors += 1;
+                return (passed, errors, duplicates, empty);
+            }
             continue;
         }
 
@@ -95,15 +109,23 @@ fn validate_file(
 
         match validate::validate_row(&line, line_num) {
             RowResult::Ok(data) => {
-                if existing.contains(&data.base_form) {
-                    println!("  ! {}행: 중복 — \"{}\" (yong_list.csv에 존재)", line_num, data.base_form);
+                let pair = (data.base_form.clone(), data.dict_id.clone());
+
+                if existing_base_forms.contains(&data.base_form) && data.dict_id.is_empty() {
+                    // 기본 목록에 있는 용언인데 dict_id가 없음
+                    println!("  ✗ {}행: 오류 — \"{}\"는 yong_list.csv에 존재합니다. 동음이의어를 추가하려면 dict_id가 필요합니다.", line_num, data.base_form);
+                    errors += 1;
+                } else if existing_pairs.contains(&pair) {
+                    // (base_form, dict_id) 쌍이 이미 기본 목록에 존재
+                    println!("  ! {}행: 중복 — \"{}\" (dict_id=\"{}\", yong_list.csv에 존재)", line_num, data.base_form, data.dict_id);
                     duplicates += 1;
-                } else if seen.contains(&data.base_form) {
+                } else if seen.contains(&pair) {
+                    // 다른 사용자 파일에서 이미 추가됨
                     println!("  ! {}행: 중복 — \"{}\" (다른 사용자 파일에 존재)", line_num, data.base_form);
                     duplicates += 1;
                 } else {
                     println!("  ✓ {}행: {} ({}, {})", line_num, data.base_form, data.pos, conjugation_name(&data.conjugation));
-                    seen.insert(data.base_form.clone());
+                    seen.insert(pair);
                     passed.push(data);
                 }
             }
@@ -161,7 +183,7 @@ fn main() {
 
     println!("=== yongcat 용언 검증 ===");
 
-    let existing = load_existing();
+    let (existing_base_forms, existing_pairs) = load_existing();
     let mut seen = HashSet::new();
     let mut all_passed = Vec::new();
     let mut total_errors = 0usize;
@@ -170,7 +192,7 @@ fn main() {
     let mut total_rows = 0usize;
 
     for filename in &files {
-        let (passed, errors, duplicates, empty) = validate_file(filename, &existing, &mut seen);
+        let (passed, errors, duplicates, empty) = validate_file(filename, &existing_base_forms, &existing_pairs, &mut seen);
         let file_rows = passed.len() + errors + duplicates + empty;
         total_rows += file_rows;
         total_errors += errors;
