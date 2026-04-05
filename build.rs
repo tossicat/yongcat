@@ -4,6 +4,7 @@ use std::io::{BufRead, BufReader};
 use std::path::Path;
 
 const CSV_PATH: &str = "data/yong_list.csv";
+const USER_CSV_PATH: &str = "data/user_list.csv";
 const YONG_OUT_FILE: &str = "yong_data.rs";
 const EOMI_OUT_FILE: &str = "eomi_data.rs";
 
@@ -15,6 +16,7 @@ const EOMI_SOURCES: &[(&str, &str)] = &[
 
 fn main() {
     println!("cargo:rerun-if-changed={}", CSV_PATH);
+    println!("cargo:rerun-if-changed={}", USER_CSV_PATH);
     for (path, _) in EOMI_SOURCES {
         println!("cargo:rerun-if-changed={}", path);
     }
@@ -125,6 +127,50 @@ fn build_yong_data() {
             "    Yongeon::new(\"{}\", \"{}\", \"{}\", {}, {}),",
             base_form, dict_id, eogan, pos, conjugation
         ));
+    }
+
+    // user_list.csv가 있으면 추가로 읽기
+    if Path::new(USER_CSV_PATH).exists() {
+        let user_file = fs::File::open(USER_CSV_PATH)
+            .unwrap_or_else(|_| panic!("{}를 열 수 없습니다", USER_CSV_PATH));
+        let user_reader = BufReader::new(user_file);
+
+        for (i, line) in user_reader.lines().enumerate() {
+            let line = line.unwrap().trim_end_matches('\r').to_string();
+            if i == 0 { continue; } // 헤더
+            if line.trim().is_empty() { continue; }
+
+            let fields: Vec<&str> = line.splitn(7, ',').collect();
+            if fields.len() < 5 { continue; }
+
+            let base_form = fields[0];
+            let dict_id = fields[1];
+            let eogan = fields[2];
+            let pos = match fields[3] {
+                "동사" => "YongeonType::Verb",
+                "형용사" => "YongeonType::Adjective",
+                _ => continue,
+            };
+            let conjugation = match fields[4] {
+                "규" => "IrregularType::Regular",
+                "ㄷ" => "IrregularType::Dieut",
+                "ㅂ" => "IrregularType::Bieut",
+                "ㅎ" => "IrregularType::Hieut",
+                "ㄹ" => "IrregularType::Rieul",
+                "ㅅ" => "IrregularType::Siot",
+                "르" => "IrregularType::Reu",
+                "우" => "IrregularType::U",
+                "여" => "IrregularType::Yeo",
+                "러" => "IrregularType::Reo",
+                "으" => "IrregularType::Eu",
+                _ => continue,
+            };
+
+            entries.push(format!(
+                "    Yongeon::new(\"{}\", \"{}\", \"{}\", {}, {}),",
+                base_form, dict_id, eogan, pos, conjugation
+            ));
+        }
     }
 
     let code = format!(
