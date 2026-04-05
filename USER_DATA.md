@@ -97,6 +97,16 @@ cargo run --bin import
 
 오류가 있는 행은 건너뛰고, 통과한 행만 `data/user_list.csv`에 저장됩니다.
 
+#### 영어 등 비한글 용언
+
+기본형은 한글(가~힣)로만 구성되어야 합니다. 영어나 숫자가 포함된 용언(예: `attack다`)은 검증을 통과할 수 없습니다. 영어 단어와 한국어 활용을 조합하려면 `하다` 분리 방식을 사용하세요:
+
+```rust
+let ha = lookup("하다");
+format!("attack{}", conjugate(ha, &ASS_SEUMNIDA));
+// → "attack했습니다"
+```
+
 ### 4. 빌드
 
 ```bash
