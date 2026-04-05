@@ -615,45 +615,53 @@ fn test_postfix_all_conjugated() {
 }
 
 // --- 편의 API: lookup, lookup_all, conjugate ---
+//
+// 전역 데이터를 사용하는 편의 함수가 올바르게 동작하는지 검증합니다.
 
+/// lookup: 기본형으로 검색하면 해당 용언을 반환합니다.
 #[test]
 fn test_lookup() {
     let verb = lookup("먹다");
     assert_eq!(verb.base_form, "먹다");
 }
 
+/// lookup_all: 동음이의어가 있는 단어는 여러 결과를 반환합니다.
 #[test]
 fn test_lookup_all_homonyms() {
     let results = lookup_all("걷다");
     assert!(results.len() >= 2, "걷다는 동음이의어가 2개 이상이어야 함");
 }
 
+/// lookup_all: 동음이의어가 없는 단어도 Vec으로 반환합니다.
 #[test]
 fn test_lookup_all_single() {
     let results = lookup_all("가다");
     assert!(!results.is_empty());
 }
 
+/// lookup: 존재하지 않는 단어를 넣으면 패닉합니다.
 #[test]
 #[should_panic(expected = "용언을 찾을 수 없습니다")]
 fn test_lookup_nonexistent() {
     lookup("없는단어다");
 }
 
+/// conjugate는 postfix_word와 동일한 결과를 반환합니다.
 #[test]
 fn test_conjugate_equals_postfix_word() {
     let verb = lookup("먹다");
     assert_eq!(conjugate(verb, &ah_eo::AYO), postfix_word(verb, &ah_eo::AYO));
 }
 
+/// lookup + conjugate 조합: 공격하다 + 았습니다 → 공격했습니다
 #[test]
 fn test_conjugate_with_lookup() {
     assert_eq!(conjugate(lookup("공격하다"), &ah_eo::ASS_SEUMNIDA), "공격했습니다");
 }
 
+/// 하다를 분리해서 명사와 조합: "공격" + 했습니다 → "공격했습니다"
 #[test]
 fn test_conjugate_hada_separated() {
-    // 하다를 분리해서 활용
     let ha = lookup("하다");
     let result = format!("공격{}", conjugate(ha, &ah_eo::ASS_SEUMNIDA));
     assert_eq!(result, "공격했습니다");
