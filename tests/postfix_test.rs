@@ -7,7 +7,10 @@
 //! - `postfix`: 단어 문자열로 동음이의어를 포함한 전체 활용형 생성
 
 use yongcat::eomi::ah_eo;
-use yongcat::{conjugate, find_yongeon, load_yongeons, lookup, lookup_all, postfix, postfix_word};
+use yongcat::{
+    conjugate, conjugate_checked, find_yongeon, load_yongeons, lookup, lookup_all, postfix,
+    postfix_word,
+};
 
 // --- postfix_word: 해요체 (ah_eo::AYO) ---
 //
@@ -665,4 +668,68 @@ fn test_conjugate_hada_separated() {
     let ha = lookup("하다");
     let result = format!("공격{}", conjugate(ha, &ah_eo::ASS_SEUMNIDA));
     assert_eq!(result, "공격했습니다");
+}
+
+// --- conjugate_checked: 품사별 어미 제한 ---
+//
+// 형용사에 동사 전용 어미를 적용하면 Err을 반환합니다.
+// 동사에는 모든 어미를 적용할 수 있습니다.
+
+/// 동사 + 동사 전용 어미 → Ok
+#[test]
+fn test_checked_verb_with_verb_only_eomi() {
+    let verb = lookup("먹다");
+    assert!(conjugate_checked(verb, &yongcat::NEUN).is_ok());
+    assert_eq!(conjugate_checked(verb, &yongcat::NEUN).unwrap(), "먹는");
+}
+
+/// 형용사 + 동사 전용 어미 → Err
+#[test]
+fn test_checked_adj_with_verb_only_eomi() {
+    let adj = lookup("예쁘다");
+    assert!(conjugate_checked(adj, &yongcat::NEUN).is_err());
+}
+
+/// 형용사 + 공용 어미 → Ok
+#[test]
+fn test_checked_adj_with_common_eomi() {
+    let adj = lookup("예쁘다");
+    assert!(conjugate_checked(adj, &ah_eo::AYO).is_ok());
+    assert_eq!(conjugate_checked(adj, &ah_eo::AYO).unwrap(), "예뻐요");
+}
+
+/// 동사 전용 어미 10개 모두 형용사에서 Err 반환
+#[test]
+fn test_checked_all_verb_only_eomis() {
+    let adj = lookup("예쁘다");
+    let verb_only = [
+        &yongcat::ABODA, &yongcat::ADALLA, &yongcat::NEUN,
+        &yongcat::JA, &yongcat::NEUNDE, &yongcat::EURYEOGO,
+        &yongcat::EUREO, &yongcat::EULGE, &yongcat::EULLAE,
+        &yongcat::EUPSIDA,
+    ];
+    for eomi in verb_only {
+        assert!(
+            conjugate_checked(adj, eomi).is_err(),
+            "형용사에 동사 전용 어미가 통과되었습니다"
+        );
+    }
+}
+
+/// 동사 전용 어미 10개 모두 동사에서 Ok 반환
+#[test]
+fn test_checked_all_verb_only_eomis_with_verb() {
+    let verb = lookup("먹다");
+    let verb_only = [
+        &yongcat::ABODA, &yongcat::ADALLA, &yongcat::NEUN,
+        &yongcat::JA, &yongcat::NEUNDE, &yongcat::EURYEOGO,
+        &yongcat::EUREO, &yongcat::EULGE, &yongcat::EULLAE,
+        &yongcat::EUPSIDA,
+    ];
+    for eomi in verb_only {
+        assert!(
+            conjugate_checked(verb, eomi).is_ok(),
+            "동사에 동사 전용 어미가 거부되었습니다"
+        );
+    }
 }

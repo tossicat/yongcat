@@ -118,3 +118,40 @@ pub fn find_eomi_exact(s: &str) -> Option<&'static Eomi> {
         .find(|(_, eomi)| eomi.matches(s))
         .map(|(_, eomi)| *eomi)
 }
+
+/// 동사 전용 어미 목록입니다. 형용사에 적용하면 문법적으로 잘못된 활용형이 생성됩니다.
+const VERB_ONLY_EOMIS: &[&Eomi] = &[
+    &ABODA, &ADALLA, &NEUN, &JA, &NEUNDE,
+    &EURYEOGO, &EUREO, &EULGE, &EULLAE, &EUPSIDA,
+];
+
+/// 주어진 어미가 동사 전용인지 확인합니다.
+fn is_verb_only(eomi: &Eomi) -> bool {
+    VERB_ONLY_EOMIS.contains(&eomi)
+}
+
+/// 품사 제한을 검사하여 활용형을 생성합니다.
+///
+/// 형용사에 동사 전용 어미를 적용하면 `Err`을 반환합니다.
+/// 제한이 없는 조합이면 `Ok(활용형)`을 반환합니다.
+///
+/// ```rust
+/// use yongcat::*;
+///
+/// // 동사 + 동사 전용 어미 → Ok
+/// let verb = lookup("먹다");
+/// assert!(conjugate_checked(verb, &NEUN).is_ok());
+///
+/// // 형용사 + 동사 전용 어미 → Err
+/// let adj = lookup("예쁘다");
+/// assert!(conjugate_checked(adj, &NEUN).is_err());
+/// ```
+pub fn conjugate_checked(yongeon: &Yongeon, eomi: &Eomi) -> Result<String, String> {
+    if yongeon.is_adjective() && is_verb_only(eomi) {
+        return Err(format!(
+            "형용사 \"{}\"에 동사 전용 어미를 적용할 수 없습니다",
+            yongeon.base_form
+        ));
+    }
+    Ok(conjugate(yongeon, eomi))
+}

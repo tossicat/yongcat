@@ -18,6 +18,7 @@ pub type AhEoForm = (&'static str, &'static str);
 ///
 /// 어미의 종류에 따라 어간과 결합하는 규칙이 다르므로,
 /// 그룹별로 구분하여 `join`과 `merge` 모듈에서 분기 처리합니다.
+#[derive(PartialEq)]
 pub enum Eomi {
     /// 아/어 계열: 모음조화에 따라 형태가 달라집니다.
     AhEo(AhEoForm),
