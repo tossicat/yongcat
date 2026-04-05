@@ -5,6 +5,7 @@ edition = "2024"
 description = "한국어 용언(동사/형용사) 활용 라이브러리"
 repository = "https://github.com/tossicat/yongcat"
 license = "MIT"
+exclude = ["REVIEW.md"]
 
 [[bin]]
 name = "import"
