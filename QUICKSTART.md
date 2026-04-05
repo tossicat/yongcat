@@ -95,8 +95,9 @@ let npc_line = format!("여기서 {}.", result);
 
 **용언 데이터 생성:**
 1. `data/yong_list.csv`를 읽는다
-2. 각 행을 `Yongeon::new(...)` 호출로 변환한다
-3. `$OUT_DIR/yong_data.rs`에 `load_yongeons()` 함수를 생성한다
+2. `data/user_list.csv`가 있으면 함께 읽는다 (사용자 추가 용언)
+3. 각 행을 `Yongeon::new(...)` 호출로 변환한다
+4. `$OUT_DIR/yong_data.rs`에 `load_yongeons()` 함수를 생성한다
 
 **어미 레지스트리 생성:**
 1. `src/eomi/ah_eo.rs`, `fixed.rs`, `plain.rs`를 텍스트로 읽는다

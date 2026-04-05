@@ -108,7 +108,7 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 ### 기타
 
 - `build.rs`: CSV → `load_yongeons()`, 소스 파싱 → `load_eomis()` 코드 생성, 등급 필터링, `user_list.csv` 자동 로드
-- `build/validate.rs`: CSV 행 검증 로직 (컬럼 수, 기본형, 어간, 품사, 활용 유형)
+- `build/validate.rs`: CSV 행 검증 로직 (헤더, 컬럼 수, 기본형 한글, 어간 일치, 품사, 활용 유형, dict_id 숫자, grade A/B/C)
 - `src/bin/import.rs`: 사용자 CSV 검증 CLI (`cargo run --bin import`)
 - `syllable.rs`: 한글 유니코드 분해/합성, `starts_with_vowel()`, `combine_jamo()`, 외부 의존성 없음
 - `Yongeon::new()`: 빈 어간 assert 포함
