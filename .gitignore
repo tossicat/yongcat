@@ -22,3 +22,6 @@ target
 
 # macOS
 .DS_Store
+
+# import로 생성되는 사용자 용언 데이터
+data/user_list.csv
