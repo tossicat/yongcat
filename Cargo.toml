@@ -1,10 +1,12 @@
 [package]
 name = "yongcat"
-version = "0.8.0"
+version = "0.8.1"
 edition = "2024"
 description = "한국어 용언(동사/형용사) 활용 라이브러리"
 repository = "https://github.com/tossicat/yongcat"
 license = "MIT"
+keywords = ["hangul", "hangeul", "library", "lib"]
+categories = ["development-tools", "text-processing"]
 exclude = ["REVIEW.md", "temp.md"]
 
 [[bin]]
