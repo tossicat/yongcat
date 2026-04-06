@@ -9,7 +9,7 @@ use yongcat::{find_eomi, find_eomi_exact, load_eomis};
 
 #[test]
 fn test_load_eomis_count() {
-    // 전체 어미 상수 42개 (AhEo 12 + Fixed 14 + Plain 16)
+    // 전체 어미 상수 46개 (AhEo 13 + Fixed 16 + Plain 17)
     let eomis = load_eomis();
     assert_eq!(eomis.len(), 46);
 }
