@@ -144,7 +144,7 @@ apply  ──→ irregular::merge ──→ Some이면 반환
 | `tests/eomi_plain_test.rs` | 45개 | 상수 × 받침 유무 + 불규칙 + 새 어미 + 자모 합성×불규칙 |
 | `tests/postfix_test.rs` | 76개 | 규칙/불규칙/ㅡ탈락/동음이의어/편의API/품사제한 통합 |
 | `tests/yongeon_test.rs` | 7개 | find_yongeon, find_eogan |
-| doctest | 1개 | Yongeon::new 예시 |
+| doctest | 2개 | Yongeon::new 예시, conjugate_checked 예시 |
 
 ## 다른 프로젝트에서 사용
 
